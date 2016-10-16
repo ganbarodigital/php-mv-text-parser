@@ -9,3 +9,4 @@
   - added `T_ASSIGN` token
   - added `T_AT` token
   - added `T_CLOSE_BRACE` token
+  - added `T_CLOSE_BRACKET` token
