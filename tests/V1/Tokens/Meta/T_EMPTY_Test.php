@@ -41,14 +41,14 @@
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigitalTest\TextParser\V1\Lazy\Tokens;
+namespace GanbaroDigitalTest\TextParser\V1\Meta\Tokens;
 
-use GanbaroDigital\TextParser\V1\Tokens\Lazy\T_EMPTY;
+use GanbaroDigital\TextParser\V1\Tokens\Meta\T_EMPTY;
 use GanbaroDigital\TextParser\V1\Grammars\Token;
 use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Tokens\Lazy\T_EMPTY
+ * @coversDefaultClass GanbaroDigital\TextParser\V1\Tokens\Meta\T_EMPTY
  */
 class T_EMPTY_Test extends PHPUnit_Framework_TestCase
 {

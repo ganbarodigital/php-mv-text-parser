@@ -19,7 +19,7 @@
   - added `T_COMMA` lazy-match token
   - added `T_DOLLAR` lazy-match token
   - added `T_DOUBLE_QUOTE` lazy-match token
-  - added `T_EMPTY` lazy-match token
+  - added `T_EMPTY` meta token
   - added `T_EQUALS` lazy-match token
   - added `T_FORWARD_SLASH` lazy-match token
   - added `T_GREATER_THAN` lazy-match token

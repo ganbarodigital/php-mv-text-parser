@@ -41,7 +41,7 @@
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigital\TextParser\V1\Tokens\Lazy;
+namespace GanbaroDigital\TextParser\V1\Tokens\Meta;
 
 use GanbaroDigital\TextParser\V1\Grammars\Token;
 
