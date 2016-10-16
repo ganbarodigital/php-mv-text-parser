@@ -12,6 +12,7 @@
   - added `T_AT` lazy-match token
   - added `T_BACKSLASH` lazy-match token
   - added `T_BACKTICK` lazy-match token
+  - added `T_CIRCUMFLEX` lazy-match token
   - added `T_CLOSE_BRACE` token
   - added `T_CLOSE_BRACKET` token
   - added `T_COMMA` token
