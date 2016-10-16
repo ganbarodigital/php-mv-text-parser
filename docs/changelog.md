@@ -15,6 +15,7 @@
   - added `T_COMMA` token
   - added `T_DOUBLE_AT` token
   - added `T_EMPTY` token
+  - added `T_PIPE` lazy-match token
   - added `T_PLING` lazy-match token
   - added `T_PLUS` lazy-match token
   - added `T_QUESTION_MARK` lazy-match token
