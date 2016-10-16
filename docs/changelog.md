@@ -14,6 +14,7 @@
   - added `T_CIRCUMFLEX` lazy-match token
   - added `T_CLOSE_BRACE` token
   - added `T_CLOSE_BRACKET` token
+  - added `T_COLON` lazy-match token
   - added `T_COMMA` lazy-match token
   - added `T_DOLLAR` lazy-match token
   - added `T_DOUBLE_QUOTE` lazy-match token
