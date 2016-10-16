@@ -162,7 +162,7 @@ class T_CLOSE_BRACETest extends PHPUnit_Framework_TestCase
     /**
      * @coversNothing
      */
-    public function test_regex_matches_a_brace_symbol()
+    public function test_regex_matches_a_close_brace_symbol()
     {
         // ----------------------------------------------------------------
         // setup your test
