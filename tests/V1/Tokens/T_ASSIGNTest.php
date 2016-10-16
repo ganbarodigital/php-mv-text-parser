@@ -185,13 +185,13 @@ class T_ASSIGNTest extends PHPUnit_Framework_TestCase
 
     /**
      * @coversNothing
+     * @dataProvider provideNonMatches
      */
-    public function test_regex_does_not_match_equals()
+    public function test_regex_does_not_match_anything_else($text)
     {
         // ----------------------------------------------------------------
         // setup your test
 
-        $text = '==100';
         $unit = new T_ASSIGN;
         $expectedMatches = [ ];
 
@@ -207,27 +207,16 @@ class T_ASSIGNTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedMatches, $actualMatches);
     }
 
-    /**
-     * @coversNothing
-     */
-    public function test_regex_does_not_match_strict_equals()
+    public function provideNonMatches()
     {
-        // ----------------------------------------------------------------
-        // setup your test
+        // reuse our standard test set
+        $retval = getTokenDataset();
 
-        $text = '===100';
-        $unit = new T_ASSIGN;
-        $expectedMatches = [ ];
+        // strip out the things that are supposed to match!
+        unset($retval['assign']);
 
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatches = [];
-        preg_match($unit->getRegex(), $text, $actualMatches);
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatches, $actualMatches);
+        // all done
+        return $retval;
     }
+
 }

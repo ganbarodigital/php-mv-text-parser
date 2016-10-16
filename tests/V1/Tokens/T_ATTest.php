@@ -209,26 +209,13 @@ class T_ATTest extends PHPUnit_Framework_TestCase
 
     public function provideNonMatches()
     {
-        return [
-            "number" => [ "123456789" ],
-            "string" => [ '"@100"' ],
-            "pling_operator" => [ "!" ],
-            "double_quotes" => [ '"' ],
-            "sterling" => [ '£' ],
-            'dollar' => [ '$' ],
-            'percentage' => [ '%' ],
-            'circumflex' => [ '^' ],
-            'ampersand' => [ '&' ],
-            'asterix' => [ '*' ],
-            'open_bracket' => [ '{' ],
-            'close_bracket' => [ '}' ],
-            'minus' => [ '-' ],
-            'plus' => [ '+' ],
-            'underscore' => [ '_' ],
-            'assignment' => [ '=' ],
-            'equals' => [ '==' ],
-            'strict_equals' => [ '===' ],
-            'double_at' => [ '@@' ],
-        ];
+        // reuse our standard test set
+        $retval = getTokenDataset();
+
+        // strip out the things that are supposed to match!
+        unset($retval['at']);
+
+        // all done
+        return $retval;
     }
 }
