@@ -14,7 +14,7 @@
   - added `T_CLOSE_BRACKET` token
   - added `T_COMMA` token
   - added `T_DOUBLE_AT` token
-  - added `T_EMPTY` token
+  - added `T_EMPTY` lazy-match token
   - added `T_MINUS` lazy-match token
   - added `T_OPEN_BRACKET` lazy-match token
   - added `T_OPEN_SQUARE_BRACKET` lazy-match token
