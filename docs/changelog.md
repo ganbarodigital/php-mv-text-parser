@@ -15,3 +15,4 @@
   - added `T_COMMA` token
   - added `T_DOUBLE_AT` token
   - added `T_EMPTY` token
+  - added `T_UNDERSCORE` lazy-match token
