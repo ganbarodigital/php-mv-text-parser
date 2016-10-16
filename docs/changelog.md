@@ -8,7 +8,6 @@
 * Added some pre-defined tokens to save you having to define them in every project
   - added `T_AMPERSAND` lazy-match token
   - added `T_ASTERISK` lazy-match token
-  - added `T_ASSIGN` token
   - added `T_AT` lazy-match token
   - added `T_BACKSLASH` lazy-match token
   - added `T_BACKTICK` lazy-match token
@@ -18,6 +17,7 @@
   - added `T_COMMA` token
   - added `T_DOUBLE_AT` token
   - added `T_EMPTY` lazy-match token
+  - added `T_EQUALS` lazy-match token
   - added `T_FORWARD_SLASH` lazy-match token
   - added `T_GREATER_THAN` lazy-match token
   - added `T_GREATER_THAN_OR_EQUAL_TO` lazy-match token
