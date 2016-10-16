@@ -12,7 +12,7 @@
   - added `T_BACKSLASH` lazy-match token
   - added `T_BACKTICK` lazy-match token
   - added `T_CIRCUMFLEX` lazy-match token
-  - added `T_CLOSE_BRACE` token
+  - added `T_CLOSE_BRACE` lazy-match token
   - added `T_CLOSE_BRACKET` lazy-match token
   - added `T_CLOSE_SQUARE_BRACKET` lazy-match token
   - added `T_COLON` lazy-match token
