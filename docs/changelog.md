@@ -10,6 +10,7 @@
   - added `T_ASTERISK` lazy-match token
   - added `T_ASSIGN` token
   - added `T_AT` token
+  - added `T_BACKTICK` lazy-match token
   - added `T_CLOSE_BRACE` token
   - added `T_CLOSE_BRACKET` token
   - added `T_COMMA` token
