@@ -43,15 +43,15 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Lazy;
 
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\PrefixToken;
 
 /**
  * matches the '$' symbol
  */
-class T_DOLLAR extends Token
+class T_DOLLAR extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_DOLLAR", '/^\\$/');
+        parent::__construct("T_DOLLAR", '$');
     }
 }

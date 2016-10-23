@@ -43,15 +43,15 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Lazy;
 
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\PrefixToken;
 
 /**
  * matches the '-' symbol
  */
-class T_MINUS extends Token
+class T_MINUS extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_MINUS", '/^-/');
+        parent::__construct("T_MINUS", '-');
     }
 }

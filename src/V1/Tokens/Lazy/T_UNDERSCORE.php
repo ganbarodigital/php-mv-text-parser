@@ -43,15 +43,15 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Lazy;
 
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\PrefixToken;
 
 /**
  * matches the '_' symbol
  */
-class T_UNDERSCORE extends Token
+class T_UNDERSCORE extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_UNDERSCORE", '/^_/');
+        parent::__construct("T_UNDERSCORE", '_');
     }
 }

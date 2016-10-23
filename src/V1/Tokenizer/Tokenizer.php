@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2016-present Ganbaro Digital Ltd
+ * Copyright (c) 2015-present Ganbaro Digital Ltd
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,57 +34,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @category  Libraries
- * @package   TextParser\V1\Grammars
+ * @package   Lexer/V1
  * @author    Stuart Herbert <stuherbert@ganbarodigital.com>
- * @copyright 2016-present Ganbaro Digital Ltd www.ganbarodigital.com
+ * @copyright 2015-present Ganbaro Digital Ltd www.ganbarodigital.com
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link      http://ganbarodigital.github.io/php-mv-text-parser
+ * @link      http://ganbarodigital.github.io/php-mv-source-reflection
  */
 
-namespace GanbaroDigital\TextParser\V1\Grammars;
+namespace GanbaroDigital\SourceReflection\V0\TextParsers;
 
-/**
- * an individual token in our overall grammar
- *
- * tokens are ultimately how we move through the text
- */
-class Token implements Grammar
+class RegexTokenizer
 {
-    /**
-     * the name of this token, according to our grammar
-     *
-     * @var string
-     */
-    private $tokenName;
-
-    /**
-     * the regex used to match this token
-     *
-     * @var string
-     */
-    private $tokenRegex;
-
-    /**
-     * build a new token
-     *
-     * @param string $tokenName
-     *        what does our grammar call this token?
-     * @param string $tokenRegex
-     *        how do we find this token in the text that we are parsing?
-     */
-    public function __construct($tokenName, $tokenRegex)
+    public static function tokenize($text, $validTokens)
     {
-        $this->tokenName = $tokenName;
-        $this->tokenRegex = $tokenRegex;
-    }
+        foreach ($validTokens as $tokenName => $tokenRegex) {
+            $matches=[];
+            if (preg_match($tokenRegex, $text, $matches)) {
+                if (isset($matches[1])) {
+                    return [ $tokenName, $matches[0], $matches[1] ];
+                }
 
-    public function getName()
-    {
-        return $this->tokenName;
-    }
+                return [ $tokenName, $matches[0], [] ];
+            }
+        }
 
-    public function getRegex()
-    {
-        return $this->tokenRegex;
+        // if we get here, then nothing matched
+        return null;
     }
 }

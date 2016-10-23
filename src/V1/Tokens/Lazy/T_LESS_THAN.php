@@ -43,12 +43,12 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Lazy;
 
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
  * matches the '<' symbol
  */
-class T_LESS_THAN extends Token
+class T_LESS_THAN extends RegexToken
 {
     public function __construct()
     {

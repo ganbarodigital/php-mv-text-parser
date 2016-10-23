@@ -43,15 +43,56 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Meta;
 
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\Grammar;
 
 /**
  * a special token that always matches, and consumes nothing
  */
-class T_EMPTY extends Token
+class T_EMPTY implements Grammar
 {
-    public function __construct()
+    private $tokenName = "T_EMPTY";
+
+    /**
+     * return a (possibly empty) list of the grammars that this grammer
+     * is built upon
+     *
+     * @return Grammar[]
+     */
+    public function getBuildingBlocks()
     {
-        parent::__construct("T_EMPTY", "//");
+        // tokens are *always* terminal symbols
+        return [];
+    }
+
+    /**
+     * describe this grammar using BNF-like syntax
+     *
+     * @return string
+     */
+    public function getPseudoBNF()
+    {
+        return "";
+    }
+
+    /**
+     * does this grammar match against the provided text?
+     *
+     * @param  Grammars[] $grammars
+     *         our dictionary of grammars
+     * @param  string $lexemeName
+     *         the name to assign to any lexeme we create
+     * @param  string $text
+     *         the text to match
+     * @return array
+     *         details about what happened
+     */
+    public function matchAgainst($grammars, $lexemeName, $text)
+    {
+        return [
+            'matched' => true,
+            'hasValue' => false,
+            'value' => null,
+            'remaining' => $text,
+        ];
     }
 }

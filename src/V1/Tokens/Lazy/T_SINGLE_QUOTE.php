@@ -43,15 +43,15 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Lazy;
 
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\PrefixToken;
 
 /**
  * matches the "'" symbol
  */
-class T_SINGLE_QUOTE extends Token
+class T_SINGLE_QUOTE extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_SINGLE_QUOTE", '/^\'/');
+        parent::__construct("T_SINGLE_QUOTE", '\'');
     }
 }

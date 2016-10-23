@@ -48,4 +48,32 @@ namespace GanbaroDigital\TextParser\V1\Grammars;
  */
 interface Grammar
 {
+    /**
+     * return a (possibly empty) list of the grammars that this grammar
+     * is built upon
+     *
+     * @return Grammar[]
+     */
+    public function getBuildingBlocks();
+
+    /**
+     * describe this grammar using BNF-like syntax
+     *
+     * @return string
+     */
+    public function getPseudoBNF();
+
+    /**
+     * does this grammar match against the provided text?
+     *
+     * @param  Grammars[] $grammars
+     *         our dictionary of grammars
+     * @param  string $lexemeName
+     *         the name to assign to any lexeme we create
+     * @param  string $text
+     *         the text to match
+     * @return array
+     *         details about what happened
+     */
+    public function matchAgainst($grammars, $lexemeName, $text);
 }
