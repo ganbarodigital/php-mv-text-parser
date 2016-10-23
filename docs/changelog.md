@@ -43,3 +43,5 @@
   - added `T_STERLING` lazy-match token
   - added `T_TILDE` lazy-match token
   - added `T_UNDERSCORE` lazy-match token
+* Added support for scanning input streams
+  - added `ScannerPosition` value object
