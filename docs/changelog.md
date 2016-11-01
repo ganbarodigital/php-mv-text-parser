@@ -47,3 +47,4 @@
   - added `ScannerPosition` value object
   - added `Scanner` interface
   - added `StreamScanner` scanner
+  - added `StringScanner` scanner
