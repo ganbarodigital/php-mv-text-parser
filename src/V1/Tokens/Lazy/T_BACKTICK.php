@@ -52,6 +52,6 @@ class T_BACKTICK extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_BACKTICK", '^');
+        parent::__construct('`');
     }
 }
