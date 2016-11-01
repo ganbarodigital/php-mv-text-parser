@@ -52,6 +52,6 @@ class T_AMPERSAND extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_AMPERSAND", '&');
+        parent::__construct('&');
     }
 }
