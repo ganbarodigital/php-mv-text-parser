@@ -52,6 +52,6 @@ class T_ASTERISK extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_ASTERISK", '*');
+        parent::__construct('*');
     }
 }
