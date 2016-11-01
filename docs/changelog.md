@@ -46,3 +46,4 @@
 * Added support for scanning input streams
   - added `ScannerPosition` value object
   - added `Scanner` interface
+  - added `StreamScanner` scanner
