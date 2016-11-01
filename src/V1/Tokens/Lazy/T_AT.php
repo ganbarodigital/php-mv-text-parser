@@ -52,6 +52,6 @@ class T_AT extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_AT", "@");
+        parent::__construct("@");
     }
 }
