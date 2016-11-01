@@ -97,33 +97,10 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getPrefix
-     */
-    public function test_defines_expected_prefix()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $unit = new T_AMPERSAND;
-        $expectedPrefix = "&";
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualPrefix = $unit->getPrefix();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertTrue(is_string($actualPrefix));
-        $this->assertEquals($expectedPrefix, $actualPrefix);
-    }
-
-    /**
      * @coversNothing
      * @dataProvider provideMatches
      */
-    public function test_token_matches_an_ampersand($text)
+    public function test_matches_an_ampersand($text)
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -162,7 +139,7 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
      * @coversNothing
      * @dataProvider provideNonMatches
      */
-    public function test_token_does_not_match_anything_else($text)
+    public function test_does_not_match_anything_else($text)
     {
         $language = [
             "unit" => new T_AMPERSAND
