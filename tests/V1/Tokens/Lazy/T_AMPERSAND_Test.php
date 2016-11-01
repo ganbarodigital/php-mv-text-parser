@@ -44,7 +44,7 @@
 namespace GanbaroDigitalTest\TextParser\V1\Tokens\Lazy;
 
 use GanbaroDigital\TextParser\V1\Tokens\Lazy\T_AMPERSAND;
-use GanbaroDigital\TextParser\V1\Grammars\PrefixToken;
+use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
 use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
 use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
 use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
@@ -79,7 +79,7 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      */
-    public function test_is_PrefixToken()
+    public function test_is_TerminalRule()
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -93,7 +93,7 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertInstanceOf(PrefixToken::class, $unit);
+        $this->assertInstanceOf(TerminalRule::class, $unit);
     }
 
     /**
