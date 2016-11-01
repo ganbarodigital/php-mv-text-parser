@@ -169,7 +169,7 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
     public function provideMatches()
     {
         // reuse our standard test set
-        $dataset = getTokenDataset();
+        $dataset = getTerminalDataset();
 
         // send back the items that are supposed to match!
         $retval = [
@@ -187,7 +187,7 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
     public function provideNonMatches()
     {
         // reuse our standard test set
-        $retval = getTokenDataset();
+        $retval = getTerminalDataset();
 
         // strip out the things that are supposed to match!
         unset($retval['1_ampersand']);
