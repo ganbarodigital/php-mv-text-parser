@@ -44,7 +44,11 @@
 namespace GanbaroDigitalTest\TextParser\V1\Tokens\Lazy;
 
 use GanbaroDigital\TextParser\V1\Tokens\Lazy\T_AMPERSAND;
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\PrefixToken;
+use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
+use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
+use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -75,7 +79,7 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      */
-    public function test_is_Token()
+    public function test_is_PrefixToken()
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -89,123 +93,100 @@ class T_AMPERSAND_Test extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertInstanceOf(Token::class, $unit);
+        $this->assertInstanceOf(PrefixToken::class, $unit);
     }
 
     /**
-     * @covers ::getName
+     * @covers ::getPrefix
      */
-    public function test_can_get_token_name()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $expectedName = 'T_AMPERSAND';
-        $unit = new T_AMPERSAND;
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualName = $unit->getName();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedName, $actualName);
-    }
-
-    /**
-     * @covers ::getRegex
-     */
-    public function test_can_get_token_regex()
+    public function test_defines_expected_prefix()
     {
         // ----------------------------------------------------------------
         // setup your test
 
         $unit = new T_AMPERSAND;
+        $expectedPrefix = "&";
 
         // ----------------------------------------------------------------
         // perform the change
 
-        $actualRegex = $unit->getRegex();
+        $actualPrefix = $unit->getPrefix();
 
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertTrue(is_string($actualRegex));
-        $this->assertTrue(strlen(trim($actualRegex)) > 0);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::getRegex
-     */
-    public function test_defines_a_valid_regex()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $unit = new T_AMPERSAND;
-        $actualRegex = $unit->getRegex();
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $isRegex = @preg_match($actualRegex, '');
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertNotFalse($isRegex);
+        $this->assertTrue(is_string($actualPrefix));
+        $this->assertEquals($expectedPrefix, $actualPrefix);
     }
 
     /**
      * @coversNothing
      * @dataProvider provideMatches
      */
-    public function test_regex_matches_an_ampersand($text)
+    public function test_token_matches_an_ampersand($text)
     {
         // ----------------------------------------------------------------
         // setup your test
 
-        $text .= '100';
-        $unit = new T_AMPERSAND;
-        $expectedMatches = [ '&' ];
+        $language = [
+            "unit" => new T_AMPERSAND
+        ];
+        $expectedMatch = [
+            "matched" => true,
+            "hasValue" => true,
+            "value" => new Lexeme("unit", "&"),
+            "position" => new ScannerPosition(1, 0, 0),
+        ];
+        $expectedValue = '&';
+
+        $expectedRemaining = substr($text, 1) . '100';
+        $scanner = StreamScanner::newFromString($text . '100', 'unit test');
 
         // ----------------------------------------------------------------
         // perform the change
 
-        $actualMatches = [];
-        preg_match($unit->getRegex(), $text, $actualMatches);
+        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
+        $this->assertEquals($expectedMatch, $actualMatch);
+
+        $actualValue = $actualMatch['value']->evaluate();
+        $actualRemaining = $scanner->readRemainingBytes();
 
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertEquals($expectedMatches, $actualMatches);
+        $this->assertEquals($expectedValue, $actualValue);
+        $this->assertEquals($expectedRemaining, $actualRemaining);
     }
 
     /**
      * @coversNothing
      * @dataProvider provideNonMatches
      */
-    public function test_regex_does_not_match_anything_else($text)
+    public function test_token_does_not_match_anything_else($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
+        $language = [
+            "unit" => new T_AMPERSAND
+        ];
+        $expectedMatch = [
+            "matched" => false,
+            "position" => new ScannerPosition(1,0,0),
+            "expected" => $language["unit"]
+        ];
 
-        $unit = new T_AMPERSAND;
-        $expectedMatches = [ ];
+        $expectedRemaining = $text . '100';
+        $scanner = StreamScanner::newFromString($expectedRemaining, 'unit test');
 
         // ----------------------------------------------------------------
         // perform the change
 
-        $actualMatches = [];
-        preg_match($unit->getRegex(), $text, $actualMatches);
+        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
+        $actualRemaining = $scanner->readRemainingBytes();
 
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertEquals($expectedMatches, $actualMatches);
+        $this->assertEquals($expectedMatch, $actualMatch);
+        $this->assertEquals($expectedRemaining, $actualRemaining);
     }
 
     public function provideMatches()
