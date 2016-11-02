@@ -52,6 +52,6 @@ class T_CIRCUMFLEX extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_CIRCUMFLEX", '^');
+        parent::__construct('^');
     }
 }
