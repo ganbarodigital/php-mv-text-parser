@@ -164,7 +164,6 @@ class T_BACKSLASH_Test extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedMatch, $actualMatch);
         $this->assertEquals($expectedRemainder, $actualRemainder);
-
     }
 
     public function provideMatches()
