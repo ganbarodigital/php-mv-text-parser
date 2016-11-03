@@ -52,6 +52,6 @@ class T_TILDE extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_TILDE", '~');
+        parent::__construct('~');
     }
 }
