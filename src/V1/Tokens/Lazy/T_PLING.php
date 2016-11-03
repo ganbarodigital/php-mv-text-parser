@@ -52,6 +52,6 @@ class T_PLING extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_PLING", '!');
+        parent::__construct('!');
     }
 }
