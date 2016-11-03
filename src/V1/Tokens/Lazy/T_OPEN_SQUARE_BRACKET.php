@@ -52,6 +52,6 @@ class T_OPEN_SQUARE_BRACKET extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_OPEN_SQUARE_BRACKET", '[');
+        parent::__construct('[');
     }
 }
