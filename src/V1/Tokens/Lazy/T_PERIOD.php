@@ -52,6 +52,6 @@ class T_PERIOD extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_PERIOD", '.');
+        parent::__construct('.');
     }
 }
