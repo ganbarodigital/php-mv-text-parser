@@ -52,6 +52,6 @@ class T_MINUS extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_MINUS", '-');
+        parent::__construct('-');
     }
 }
