@@ -50,7 +50,8 @@ function getTerminalDataSet()
     $individualChars = [
         'pling' => '!',
         'double_quote' => '"',
-        'sterling' => '£',
+        'sterling_ascii' => chr(156),
+        'sterling_utf8' => '£',
         'dollar' => '$',
         'percent' => '%',
         'circumflex' => '^',

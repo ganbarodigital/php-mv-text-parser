@@ -43,15 +43,16 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Lazy;
 
-use GanbaroDigital\TextParser\V1\Grammars\PrefixToken;
+use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
- * matches the '£' symbol
+ * matches the '£' symbol - both the UTF8 encoding and the original, ASCII
+ * encoding
  */
-class T_STERLING extends PrefixToken
+class T_STERLING extends RegexToken
 {
     public function __construct()
     {
-        parent::__construct("T_STERLING", '£');
+        parent::__construct('/£|' . chr(156) . '/');
     }
 }
