@@ -52,6 +52,6 @@ class T_OPEN_BRACE extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_OPEN_BRACE", '{');
+        parent::__construct('{');
     }
 }
