@@ -52,6 +52,6 @@ class T_CLOSE_BRACKET extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_CLOSE_BRACKET", ')');
+        parent::__construct(')');
     }
 }
