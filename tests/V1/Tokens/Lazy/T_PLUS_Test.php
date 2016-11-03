@@ -44,7 +44,11 @@
 namespace GanbaroDigitalTest\TextParser\V1\Tokens\Lazy;
 
 use GanbaroDigital\TextParser\V1\Tokens\Lazy\T_PLUS;
-use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
+use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
+use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
+use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -75,7 +79,7 @@ class T_PLUS_Test extends PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      */
-    public function test_is_Token()
+    public function test_is_TerminalRule()
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -89,129 +93,82 @@ class T_PLUS_Test extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertInstanceOf(Token::class, $unit);
-    }
-
-    /**
-     * @covers ::getName
-     */
-    public function test_can_get_token_name()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $expectedName = 'T_PLUS';
-        $unit = new T_PLUS;
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualName = $unit->getName();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedName, $actualName);
-    }
-
-    /**
-     * @covers ::getRegex
-     */
-    public function test_can_get_token_regex()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $unit = new T_PLUS;
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualRegex = $unit->getRegex();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertTrue(is_string($actualRegex));
-        $this->assertTrue(strlen(trim($actualRegex)) > 0);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::getRegex
-     */
-    public function test_defines_a_valid_regex()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $unit = new T_PLUS;
-        $actualRegex = $unit->getRegex();
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $isRegex = @preg_match($actualRegex, '');
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertNotFalse($isRegex);
+        $this->assertInstanceOf(TerminalRule::class, $unit);
     }
 
     /**
      * @coversNothing
      * @dataProvider provideMatches
      */
-    public function test_regex_matches_a_plus_symbol($text)
+    public function test_matches_a_plus_symbol($text)
     {
         // ----------------------------------------------------------------
         // setup your test
 
-        $text .= '=100';
-        $unit = new T_PLUS;
-        $expectedMatches = [ '+' ];
+        $language = [
+            'unit' => new T_PLUS
+        ];
+
+        $expectedMatch = [
+            "matched" => true,
+            "hasValue" => true,
+            "value" => new Lexeme('unit', '+'),
+            "position" => new ScannerPosition(1,0,0)
+        ];
+        $expectedRemainder = substr($text, 1) . '100';
+        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
 
         // ----------------------------------------------------------------
         // perform the change
 
-        $actualMatches = [];
-        preg_match($unit->getRegex(), $text, $actualMatches);
+        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
+        $actualRemainder = $scanner->readRemainingBytes();
 
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertEquals($expectedMatches, $actualMatches);
+        $this->assertEquals($expectedMatch, $actualMatch);
+        $this->assertEquals($expectedRemainder, $actualRemainder);
     }
 
     /**
      * @coversNothing
      * @dataProvider provideNonMatches
      */
-    public function test_regex_does_not_match_anything_else($text)
+    public function test_does_not_match_anything_else($text)
     {
         // ----------------------------------------------------------------
         // setup your test
 
-        $unit = new T_PLUS;
-        $expectedMatches = [ ];
+        $language = [
+            'unit' => new T_PLUS
+        ];
+
+        $expectedMatch = [
+            "matched" => false,
+            "position" => new ScannerPosition(1,0,0),
+            "expected" => $language['unit']
+        ];
+        $expectedRemainder = $text . '100';
+        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
 
         // ----------------------------------------------------------------
         // perform the change
 
-        $actualMatches = [];
-        preg_match($unit->getRegex(), $text, $actualMatches);
+        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
+        $actualRemainder = $scanner->readRemainingBytes();
 
         // ----------------------------------------------------------------
         // test the results
 
-        $this->assertEquals($expectedMatches, $actualMatches);
+        $this->assertEquals($expectedMatch, $actualMatch);
+        $this->assertEquals($expectedRemainder, $actualRemainder);
     }
 
     public function provideMatches()
     {
         // reuse our standard test set
-        $dataset = getTokenDataset();
+        $dataset = getTerminalDataset();
 
         // send back the items that are supposed to match!
         $retval = [
@@ -229,7 +186,7 @@ class T_PLUS_Test extends PHPUnit_Framework_TestCase
     public function provideNonMatches()
     {
         // reuse our standard test set
-        $retval = getTokenDataset();
+        $retval = getTerminalDataset();
 
         // strip out the things that are supposed to match!
         unset($retval['1_plus']);
