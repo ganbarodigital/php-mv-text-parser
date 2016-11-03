@@ -43,15 +43,15 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Meta;
 
-use GanbaroDigital\TextParser\V1\Grammars\Grammar;
+use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * a special token that always matches, and consumes nothing
  */
-class T_EMPTY implements Grammar
+class T_EMPTY implements TerminalRule
 {
-    private $tokenName = "T_EMPTY";
-
     /**
      * return a (possibly empty) list of the grammars that this grammer
      * is built upon
@@ -81,18 +81,22 @@ class T_EMPTY implements Grammar
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanners $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // special case - we DO NOT adjust the input stream at all in here
+
         return [
             'matched' => true,
             'hasValue' => false,
             'value' => null,
-            'remaining' => $text,
+            'position' => $scanner->getPosition()
         ];
     }
 }
