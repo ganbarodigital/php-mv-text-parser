@@ -52,6 +52,6 @@ class T_PLUS extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_PLUS", '+');
+        parent::__construct('+');
     }
 }
