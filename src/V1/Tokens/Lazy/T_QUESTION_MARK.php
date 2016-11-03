@@ -52,6 +52,6 @@ class T_QUESTION_MARK extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_QUESTION_MARK", '?');
+        parent::__construct('?');
     }
 }
