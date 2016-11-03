@@ -52,6 +52,6 @@ class T_SINGLE_QUOTE extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_SINGLE_QUOTE", '\'');
+        parent::__construct('\'');
     }
 }
