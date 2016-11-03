@@ -52,6 +52,6 @@ class T_SEMI_COLON extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_SEMI_COLON", ';');
+        parent::__construct(';');
     }
 }
