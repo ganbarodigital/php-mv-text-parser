@@ -52,6 +52,6 @@ class T_UNDERSCORE extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_UNDERSCORE", '_');
+        parent::__construct('_');
     }
 }
