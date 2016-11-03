@@ -52,6 +52,6 @@ class T_PERCENT extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_PERCENT", '%');
+        parent::__construct('%');
     }
 }
