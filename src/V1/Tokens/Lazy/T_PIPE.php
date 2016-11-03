@@ -52,6 +52,6 @@ class T_PIPE extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_PIPE", '|');
+        parent::__construct('|');
     }
 }
