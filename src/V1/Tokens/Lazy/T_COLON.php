@@ -52,6 +52,6 @@ class T_COLON extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_COLON", ':');
+        parent::__construct(':');
     }
 }
