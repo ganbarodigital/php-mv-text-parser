@@ -52,6 +52,6 @@ class T_EQUALS extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_EQUALS", '=');
+        parent::__construct('=');
     }
 }
