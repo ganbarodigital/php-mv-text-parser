@@ -43,16 +43,19 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
+
 /**
  * the behaviour supported by all of our grammar components
  */
-interface Grammar
+interface GrammarRule
 {
     /**
      * return a (possibly empty) list of the grammars that this grammar
      * is built upon
      *
-     * @return Grammar[]
+     * @return GrammarRule[]
      */
     public function getBuildingBlocks();
 
@@ -66,14 +69,16 @@ interface Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text);
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster);
 }
