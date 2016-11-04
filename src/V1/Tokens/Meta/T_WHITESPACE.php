@@ -43,15 +43,85 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Meta;
 
-use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
+use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
- * matches any whitespace
+ * consumes horizontal and vertical whitespace
  */
-class T_WHITESPACE extends RegexToken
+class T_WHITESPACE implements TerminalRule
 {
-    public function __construct(callable $marshall = null)
+    /**
+     * return a (possibly empty) list of the grammars that this grammer
+     * is built upon
+     *
+     * @return Grammar[]
+     */
+    public function getBuildingBlocks()
     {
-        parent::__construct("T_WHITESPACE", '/^(?:\s|\v)+/', $marshall);
+        // tokens are *always* terminal symbols
+        return [];
+    }
+
+    /**
+     * describe this grammar using BNF-like syntax
+     *
+     * @return string
+     */
+    public function getPseudoBNF()
+    {
+        return "regex /\s\v+/";
+    }
+
+    /**
+     * does this grammar match against the provided text?
+     *
+     * @param  GrammarList[] $grammars
+     *         our dictionary of grammars
+     * @param  string $lexemeName
+     *         the name to assign to any lexeme we create
+     * @param  Scanners $scanner
+     *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
+     * @return array
+     *         details about what happened
+     */
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
+    {
+        // make any adjustments before we begin
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // remember where we started from
+        $startPos = $scanner->getPosition();
+
+        // make any adjustments required before we attempt to match
+        $adjuster->adjustAfterStartPosition($scanner);
+
+        // we need this, to extract the matching whitespace
+        $matchStart = $scanner->getPosition();
+
+        // any whitespace to be had?
+        if (!$scanner->movePastWhitespace()) {
+            return [
+                'matched' => false,
+                'position' => $startPos,
+                'expected' => $this
+            ];
+        }
+
+        $matchEnd = $scanner->getPosition();
+
+        // there was ... but how much?
+        $scanner->setPosition($matchStart);
+        $value = $scanner->readBytes($matchEnd->getStreamPosition() - $matchStart->getStreamPosition());
+
+        return [
+            'matched' => true,
+            'hasValue' => true,
+            'value' => $value,
+            'position' => $startPos
+        ];
     }
 }
