@@ -52,6 +52,6 @@ class T_COMMA extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_COMMA", ',');
+        parent::__construct(',');
     }
 }
