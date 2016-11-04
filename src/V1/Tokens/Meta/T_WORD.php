@@ -46,12 +46,12 @@ namespace GanbaroDigital\TextParser\V1\Tokens\Meta;
 use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
- * matches a word symbol
+ * matches a word symbol, up to 1024 characters in length
  */
 class T_WORD extends RegexToken
 {
-    public function __construct(callable $marshall = null)
+    public function __construct(callable $evaluator = null)
     {
-        parent::__construct("T_WORD", '/^\w+/', $marshall);
+        parent::__construct('/^\w+/', 1024, $evaluator);
     }
 }
