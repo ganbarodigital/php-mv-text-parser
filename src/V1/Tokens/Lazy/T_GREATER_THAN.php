@@ -55,6 +55,6 @@ class T_GREATER_THAN extends RegexToken
         // make sure it does NOT match:
         //
         // - T_GREATER_THAN_OR_EQUAL_TO
-        parent::__construct("T_GREATER_THAN", '/^>(?=[^=])/');
+        parent::__construct('/^>(?=[^=])/');
     }
 }
