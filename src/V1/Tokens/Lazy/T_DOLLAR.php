@@ -52,6 +52,6 @@ class T_DOLLAR extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_DOLLAR", '$');
+        parent::__construct('$');
     }
 }
