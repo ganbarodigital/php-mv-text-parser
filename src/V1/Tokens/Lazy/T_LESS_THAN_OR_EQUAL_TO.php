@@ -52,6 +52,6 @@ class T_LESS_THAN_OR_EQUAL_TO extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_LESS_THAN_OR_EQUAL_TO", '<=');
+        parent::__construct('<=');
     }
 }
