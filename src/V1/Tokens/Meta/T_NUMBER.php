@@ -43,6 +43,7 @@
 
 namespace GanbaroDigital\TextParser\V1\Tokens\Meta;
 
+use GanbaroDigital\TextParser\V1\Evaluators\CastToNumber;
 use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
@@ -50,8 +51,11 @@ use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
  */
 class T_NUMBER extends RegexToken
 {
-    public function __construct(callable $marshall = null)
+    public function __construct(callable $evaluator = null)
     {
-        parent::__construct("T_NUMBER", "/^[0-9]+/", $marshall);
+        if ($evaluator === null) {
+            $evaluator = new CastToNumber;
+        }
+        parent::__construct("/^[-+]{0,1}[0-9]+[\\.0-9]+/", 32, $evaluator);
     }
 }
