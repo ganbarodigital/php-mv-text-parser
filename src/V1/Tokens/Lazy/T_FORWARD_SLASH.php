@@ -52,6 +52,6 @@ class T_FORWARD_SLASH extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_FORWARD_SLASH", '/');
+        parent::__construct('/');
     }
 }
