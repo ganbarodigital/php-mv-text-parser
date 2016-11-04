@@ -78,21 +78,21 @@ class StringScanner implements Scanner
      *
      * @var integer
      */
-    private $lineNo = 1;
+    protected $lineNo = 1;
 
     /**
      * keep track of where on $this->lineNo we currently are
      *
      * @var integer
      */
-    private $lineOffset = 0;
+    protected $lineOffset = 0;
 
     /**
      * keep track of where in the input we currently are
      *
      * @var integer
      */
-    private $inputPosition = 0;
+    protected $inputPosition = 0;
 
     /**
      * how many spaces does a tab character take up?
@@ -229,7 +229,7 @@ class StringScanner implements Scanner
      *         the bytes that have been read
      * @return void
      */
-    private function updatePositionFrom($bytesRead)
+    protected function updatePositionFrom($bytesRead)
     {
         // shorthand
         $bytesCount = strlen($bytesRead);
