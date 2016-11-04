@@ -7,6 +7,8 @@
   - added `Token` grammar
 * Added support for changing how a grammar is tokenised
   - added `LexAdjuster` interface
+  - added `NoopAdjuster` as the default adjuster used in our lexer
+  - added `WhitespaceAdjuster` to silently consume whitespace between grammar rules
 * Added some pre-defined tokens to save you having to define them in every project
   - added `T_AMPERSAND` lazy-match terminal token
   - added `T_ASTERISK` lazy-match terminal token
