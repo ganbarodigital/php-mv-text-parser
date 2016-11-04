@@ -43,21 +43,23 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexemes;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
-class AtLeastOnce implements Grammar
+class AtLeastOnce implements GrammarRule
 {
     /**
      * the grammar that must match at least once
      *
-     * @var Grammar
+     * @var GrammarRule
      */
     private $buildingBlock;
 
     /**
      * what separates the items in the list that we are parsing?
      *
-     * @var Grammar
+     * @var GrammarRule
      */
     private $separator;
 
@@ -67,7 +69,7 @@ class AtLeastOnce implements Grammar
      */
     private $evaluator;
 
-    public function __construct(Grammar $buildingBlock, Grammar $separator, callable $evaluator = null)
+    public function __construct(GrammarRule $buildingBlock, GrammarRule $separator, callable $evaluator = null)
     {
         $this->buildingBlock = $buildingBlock;
         $this->separator = $separator;
@@ -78,7 +80,7 @@ class AtLeastOnce implements Grammar
      * return a (possibly empty) list of the grammars that this grammer
      * is built upon
      *
-     * @return Grammar[]
+     * @return GrammarRule[]
      */
     public function getBuildingBlocks()
     {
@@ -101,24 +103,35 @@ class AtLeastOnce implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // make any necessary changes before
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // keep track of where we started from
+        $startPos = $scanner->getPosition();
+
+        // make any necessary changes after
+        $adjuster->adjustAfterStartPosition($scanner);
+
         // keep track of what has matched
         $values = [];
         $hasMatched = false;
 
         $done = false;
         while(!$done) {
-            $matches = $this->buildingBlock->matchAgainst($grammars, 'item', $text);
+            $matches = $this->buildingBlock->matchAgainst($grammars, 'item', $scanner, $adjuster);
             if (!$matches['matched']) {
                 break;
             }
@@ -126,9 +139,11 @@ class AtLeastOnce implements Grammar
             if ($matches['hasValue']) {
                 $values[] = $matches['value'];
             }
-            $text = $matches['remaining'];
 
-            $matches = $this->separator->matchAgainst($grammars, 'separator', $text);
+            // make any necessary changes to the input stream
+            $adjuster->adjustAfterMatch($scanner);
+
+            $matches = $this->separator->matchAgainst($grammars, 'separator', $scanner, $adjuster);
             if (!$matches['matched']) {
                 break;
             }
@@ -136,7 +151,9 @@ class AtLeastOnce implements Grammar
             if ($matches['hasValue']) {
                 $values[] = $matches['value'];
             }
-            $text = $matches['remaining'];
+
+            // make any necessary changes to the input stream
+            $adjuster->adjustAfterMatch($scanner);
         }
 
         // did we match anything?
@@ -146,7 +163,6 @@ class AtLeastOnce implements Grammar
                 'matched' => true,
                 'hasValue' => true,
                 'value' => new Lexemes($lexemeName, $values, $this->evaluator),
-                'remaining' => $text
             ];
         }
         if ($hasMatched) {
@@ -154,11 +170,14 @@ class AtLeastOnce implements Grammar
                 'matched' => true,
                 'hasValue' => false,
                 'value' => new Lexemes($lexemeName, [], $this->evaluator),
-                'remaining' => $text
             ];
         }
 
         // if we get here, then nothing matched
-        return ['matched' => false];
+        return [
+            'matched' => false,
+            'position' => $startPos,
+            'expected' => $this
+        ];
     }
 }

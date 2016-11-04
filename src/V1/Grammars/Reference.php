@@ -43,12 +43,14 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * a reference to another grammar
  */
-class Reference implements Grammar
+class Reference implements GrammarRule
 {
     /**
      * the grammar that we are an alias for
@@ -99,26 +101,27 @@ class Reference implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
         $grammar = $grammars[$this->buildingBlock];
 
-        $matches = $grammar->matchAgainst($grammars, $lexemeName, $text);
+        $matches = $grammar->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
         if ($matches['matched']) {
             return [
                 "matched" => true,
                 "hasValue" => true,
                 "value" => new Lexeme($this->buildingBlock, $matches['value'], $this->evaluator),
-                "remaining" => $matches['remaining'],
             ];
         }
 

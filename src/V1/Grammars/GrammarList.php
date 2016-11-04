@@ -43,19 +43,15 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexemes;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
-class GrammarList implements Grammar
+class GrammarList implements GrammarRule
 {
     /**
-     * our name
-     * @var string
-     */
-    private $grammarName;
-
-    /**
      * a list of grammars that we match against
-     * @var Grammar[]
+     * @var GrammarRule[]
      */
     private $buildingBlocks = [];
 
@@ -75,7 +71,7 @@ class GrammarList implements Grammar
      * return a (possibly empty) list of the grammars that this grammer
      * is built upon
      *
-     * @return Grammar[]
+     * @return GrammarRule[]
      */
     public function getBuildingBlocks()
     {
@@ -100,26 +96,38 @@ class GrammarList implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // make any nececessary changes to the input stream
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // remember where we started from
+        $startPos = $scanner->getPosition();
+
+        // make any necessary changes to the input stream
+        $adjuster->adjustAfterStartPosition($scanner);
+
         // keep track of the individual values that matched
         $values = [];
 
         // make sure the whole list matches
         foreach ($this->buildingBlocks as $blockName => $buildingBlock) {
             // match this block
-            $matches = $buildingBlock->matchAgainst($grammars, $blockName, $text);
+            $matches = $buildingBlock->matchAgainst($grammars, $blockName, $scanner, $adjuster);
             if (!$matches['matched']) {
                 // if one fails, all have failed
+                $scanner->setPosition($startPos);
                 return $matches;
             }
 
@@ -128,8 +136,8 @@ class GrammarList implements Grammar
                 $values[] = $matches['value'];
             }
 
-            // move on to the next piece of text
-            $text = $matches['remaining'];
+            // make any necessary changes to the input stream
+            $adjuster->adjustAfterMatch($scanner);
         }
 
         // if we get here, then everything in our list matched :)
@@ -138,7 +146,6 @@ class GrammarList implements Grammar
                 'matched' => true,
                 'hasValue' => false,
                 'value' => null,
-                'remaining' => $text,
             ];
         }
 
@@ -146,7 +153,6 @@ class GrammarList implements Grammar
             'matched' => true,
             'hasValue' => true,
             'value' => new Lexemes($lexemeName, $values, $this->evaluator),
-            'remaining' => $text
         ];
     }
 }

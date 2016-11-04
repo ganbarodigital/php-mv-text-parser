@@ -43,28 +43,32 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * an individual token in our overall grammar
  *
  * tokens are ultimately how we move through the text
  */
-class PrefixToken implements Grammar
+class PrefixToken implements TerminalRule
 {
-    /**
-     * the name of this token, according to our grammar
-     *
-     * @var string
-     */
-    private $tokenName;
-
     /**
      * the string we're looking for
      *
      * @var string
      */
     private $prefix;
+
+    /**
+     * how many bytes we're looking for
+     *
+     * this saves us calculating it multiple times
+     *
+     * @var int
+     */
+    private $prefixLen;
 
     /**
      * how do we evaluate our final value?
@@ -76,16 +80,26 @@ class PrefixToken implements Grammar
     /**
      * build a new token
      *
-     * @param string $tokenName
-     *        what does our grammar call this token?
      * @param string $prefix
      *        how do we find this token in the text that we are parsing?
      */
-    public function __construct($tokenName, $prefix, callable $evaluator = null)
+    public function __construct($prefix, callable $evaluator = null)
     {
-        $this->tokenName = $tokenName;
         $this->prefix = $prefix;
+        $this->prefixLen = strlen($prefix);
         $this->evaluator = $evaluator;
+    }
+
+    /**
+     * what is the prefix that we are going to attempt to match against?
+     *
+     * this is handy for testing that your token has set the correct prefix
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
     }
 
     /**
@@ -113,38 +127,60 @@ class PrefixToken implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // shorthand
-        $prefixLen = strlen($this->prefix);
+        // make any necessary changes to the input stream
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // keep track of where we are
+        $startPos = $scanner->getPosition();
+
+        // make any necessary changes to the input stream
+        $adjuster->adjustAfterStartPosition($scanner);
+
+        // the text we want to check
+        $text = $scanner->readBytesAhead($this->prefixLen);
 
         // special case - text is too short
-        if (strlen($text) < $prefixLen) {
+        if (strlen($text) < $this->prefixLen) {
             return [
-                'matched' => false
+                'matched' => false,
+                'position' => $startPos,
+                'expected' => $this
             ];
         }
 
-        if (substr($text, 0, $prefixLen) === $this->prefix) {
+        if ($text === $this->prefix) {
+            // a match!
+            $scanner->moveBytes($this->prefixLen);
+
+            // make any necessary changes to the input stream
+            $adjuster->adjustAfterMatch($scanner);
+
             return [
                 'matched' => true,
                 'hasValue' => true,
                 'value' => new Lexeme($lexemeName, $this->prefix, $this->evaluator),
-                'remaining' => substr($text, $prefixLen)
+                'position' => $startPos
             ];
         }
 
+        // if we get here, then no joy
         return [
-            'matched' => false
+            'matched' => false,
+            'position' => $startPos,
+            'expected' => $this
         ];
     }
 

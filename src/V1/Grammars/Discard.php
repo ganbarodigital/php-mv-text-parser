@@ -43,27 +43,29 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * a grammar that we want to throw away if we consume it
  */
-class Discard implements Grammar
+class Discard implements GrammarRule
 {
     /**
      * the grammar we want to eat
      *
-     * @var Grammar
+     * @var GrammarRule
      */
     private $buildingBlock;
 
     /**
      * create a new instance
      *
-     * @param Grammar $grammar
+     * @param GrammarRule $grammar
      *        the grammar that we want to eat
      */
-    public function __construct(Grammar $grammar)
+    public function __construct(GrammarRule $grammar)
     {
         $this->buildingBlock = $grammar;
     }
@@ -72,7 +74,7 @@ class Discard implements Grammar
      * return a (possibly empty) list of the grammars that this grammer
      * is built upon
      *
-     * @return Grammar[]
+     * @return GrammarRule[]
      */
     public function getBuildingBlocks()
     {
@@ -92,26 +94,44 @@ class Discard implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // make any necessary changes to the input stream
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // keep track of where we started from
+        $startPos = $scanner->getPosition();
+
+        // make any necessary changes to the input stream
+        $adjuster->adjustAfterStartPosition($scanner);
+
         // does our optional grammar match?
-        $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $text);
+        $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
         if ($matches['matched']) {
+            // make any necessary changes to the input stream
+            $adjuster->adjustAfterMatch($scanner);
+
             $matches['hasValue'] = false;
             $matches['value'] = new Lexeme($lexemeName, null);
             return $matches;
         }
 
         // we did not match
-        return ['matched' => false];
+        return [
+            'matched' => false,
+            'position' => $startPos,
+            'expected' => $this
+        ];
     }
 }

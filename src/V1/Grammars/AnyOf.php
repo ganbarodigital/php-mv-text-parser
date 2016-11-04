@@ -43,23 +43,25 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexemes;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * any of our building blocks are valid
  */
-class AnyOf implements Grammar
+class AnyOf implements GrammarRule
 {
     /**
      * the grammar(s) that we can match against
-     * @var Grammar[]
+     * @var GrammarRule[]
      */
     private $buildingBlocks = [];
 
     /**
      * create a new instance
      *
-     * @param Grammar[] $buildingBlocks
+     * @param GrammarRule[] $buildingBlocks
      *        the grammars that we can match against
      */
     public function __construct(array $buildingBlocks)
@@ -97,25 +99,49 @@ class AnyOf implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // make any necessary changes before
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // remember where we are
+        $startPos = $scanner->getPosition();
+
+        // make any necessary changes after
+        $adjuster->adjustAfterStartPosition($scanner);
+
+        // we're going to keep track of the best possible (failed) match
+        // found, to help with reporting problems
+        $bestFailedMatch = [
+            'matched' => false,
+            'position' => $startPos,
+            'expected' => $this
+        ];
+
         foreach ($this->buildingBlocks as $buildingBlock) {
-            $matches = $buildingBlock->matchAgainst($grammars, $lexemeName, $text);
+            $matches = $buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
             if ($matches['matched']) {
+                $adjuster->adjustAfterMatch($scanner);
                 return $matches;
+            }
+
+            if ($matches['position']->getStreamPosition() > $bestFailedMatch['position']->getStreamPosition()) {
+                $bestFailedMatch = $matches;
             }
         }
 
         // if we get here, then nothing matched
-        return ['matched' => false];
+        return $bestFailedMatch;
     }
 }

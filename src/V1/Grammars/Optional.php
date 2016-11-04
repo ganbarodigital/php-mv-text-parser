@@ -43,27 +43,29 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * a grammar that isn't required, but we want to consume
  */
-class Optional implements Grammar
+class Optional implements GrammarRule
 {
     /**
      * the optional grammar
      *
-     * @var Grammar
+     * @var GrammarRule
      */
     private $buildingBlock;
 
     /**
      * create a new instance
      *
-     * @param Grammar $grammar
+     * @param GrammarRule $grammar
      *        the optional grammar
      */
-    public function __construct(Grammar $grammar)
+    public function __construct(GrammarRule $grammar)
     {
         $this->buildingBlock = $grammar;
     }
@@ -72,7 +74,7 @@ class Optional implements Grammar
      * return a (possibly empty) list of the grammars that this grammer
      * is built upon
      *
-     * @return Grammar[]
+     * @return GrammarRule[]
      */
     public function getBuildingBlocks()
     {
@@ -92,19 +94,21 @@ class Optional implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
         // does our optional grammar match?
-        $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $text);
+        $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
         if ($matches['matched']) {
             return $matches;
         }
@@ -114,7 +118,6 @@ class Optional implements Grammar
             'matched' => true,
             'hasValue' => false,
             'value' => new Lexeme($lexemeName, null),
-            'remaining' => $text,
         ];
     }
 }

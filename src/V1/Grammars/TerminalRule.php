@@ -43,79 +43,9 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
-use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
-use GanbaroDigital\TextParser\V1\Scanners\Scanner;
-
 /**
- * match the remaining text on the input
+ * represents a GrammarRule that has no child rules
  */
-class RemainingText implements TerminalRule
+interface TerminalRule extends GrammarRule
 {
-    /**
-     * how we evaluate our return value
-     * @var callable|null
-     */
-    private $evaluator;
-
-    /**
-     * create a new instance
-     */
-    public function __construct(callable $evaluator = null)
-    {
-        $this->evaluator = $evaluator;
-    }
-
-    /**
-     * return a (possibly empty) list of the grammars that this grammer
-     * is built upon
-     *
-     * @return GrammarRule[]
-     */
-    public function getBuildingBlocks()
-    {
-        // tokens are *always* terminal symbols
-        return [];
-    }
-
-    /**
-     * describe this grammar using BNF-like syntax
-     *
-     * @return string
-     */
-    public function getPseudoBNF()
-    {
-        return "<all-remaining-text>";
-    }
-
-    /**
-     * does this grammar match against the provided text?
-     *
-     * @param  GrammarRule[] $grammars
-     *         our dictionary of grammars
-     * @param  string $lexemeName
-     *         the name to assign to any lexeme we create
-     * @param  Scanner $scanner
-     *         the text to match
-     * @param  int $flags
-     *         modify the lexer behaviour to suit
-     * @return array
-     *         details about what happened
-     */
-    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, $flags = 0)
-    {
-        // we only match if there is any text left
-        if ($scanner->isEndOfInput()) {
-            return [
-                'matched' => false,
-                'expected' => $this,
-                'position' => $scanner->getPosition()
-            ];
-        }
-
-        return [
-            'matched' => true,
-            'hasValue' => true,
-            'value' => new Lexeme($lexemeName, $scanner->readRemainingBytes(), $this->evaluator),
-        ];
-    }
 }

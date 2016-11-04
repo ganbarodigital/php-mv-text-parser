@@ -43,15 +43,27 @@
 
 namespace GanbaroDigital\TextParser\V1\Grammars;
 
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * an individual token in our overall grammar
  *
  * tokens are ultimately how we move through the text
  */
-class RegexToken implements Grammar
+class RegexToken implements TerminalRule
 {
+    /**
+     * how many bytes should we read into our buffer before applying
+     * the regex?
+     *
+     * this is the recommended default value
+     *
+     * @var integer
+     */
+    const DEFAULT_SCAN_LENGTH = 8;
+
     /**
      * the name of this token, according to our grammar
      *
@@ -67,6 +79,13 @@ class RegexToken implements Grammar
     private $tokenRegex;
 
     /**
+     * how many bytes do we ask the scanner for?
+     *
+     * @var int
+     */
+    private $scanLength;
+
+    /**
      * how do we evaluate our final value?
      *
      * @var callable|null
@@ -76,18 +95,27 @@ class RegexToken implements Grammar
     /**
      * build a new token
      *
-     * @param string $tokenName
-     *        what does our grammar call this token?
      * @param string $tokenRegex
      *        how do we find this token in the text that we are parsing?
+     * @param int $scanLength
+     *        how many characters should we ask the scanner for?
+     * @param callable|null $evaluator
+     *        how do we turn our result into a usable value?
      */
-    public function __construct($tokenName, $tokenRegex, callable $evaluator = null)
+    public function __construct($tokenRegex, $scanLength = self::DEFAULT_SCAN_LENGTH, callable $evaluator = null)
     {
-        $this->tokenName = $tokenName;
         $this->tokenRegex = $tokenRegex;
+        $this->scanLength = $scanLength;
         $this->evaluator = $evaluator;
     }
 
+    /**
+     * what is the regex that we are going to attempt to match against?
+     *
+     * this is handy for testing that your token has set the correct regex
+     *
+     * @return string
+     */
     public function getRegex()
     {
         return $this->tokenRegex;
@@ -97,7 +125,7 @@ class RegexToken implements Grammar
      * return a (possibly empty) list of the grammars that this grammer
      * is built upon
      *
-     * @return Grammar[]
+     * @return GrammarRule[]
      */
     public function getBuildingBlocks()
     {
@@ -118,38 +146,65 @@ class RegexToken implements Grammar
     /**
      * does this grammar match against the provided text?
      *
-     * @param  Grammars[] $grammars
+     * @param  GrammarRule[] $grammars
      *         our dictionary of grammars
      * @param  string $lexemeName
      *         the name to assign to any lexeme we create
-     * @param  string $text
+     * @param  Scanner $scanner
      *         the text to match
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, $text)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // make any necessary changes to the input stream
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // remember where we started from
+        $startPos = $scanner->getPosition();
+
+        // make any necessary changes to the input stream
+        $adjuster->adjustAfterStartPosition($scanner);
+
+        // go and get some text
+        $text = $scanner->readBytesAhead($this->scanLength);
+
         $matches = [];
         if (preg_match($this->tokenRegex, $text, $matches)) {
+            // have we consumed anything from the scanner?
             if (empty($matches[0])) {
+                // make any necessary changes to the input stream
+                $adjuster->adjustAfterMatch($scanner);
+
                 return [
                     'matched' => true,
                     'hasValue' => false,
                     'value' => null,
-                    'remaining' => $text,
+                    'position' => $startPos
                 ];
             }
+
+            // comsume from the stream
+            $scanner->moveBytes(strlen($matches[0]));
+
+            // make any necessary changes to the input stream
+            $adjuster->adjustAfterMatch($scanner);
 
             return [
                 'matched' => true,
                 'hasValue' => true,
                 'value' => new Lexeme($lexemeName, $matches[0], $this->evaluator),
-                'remaining' => substr($text, strlen($matches[0]))
+                'position' => $startPos
             ];
         }
 
+        // if we get here, then nothing matched
         return [
-            'matched' => false
+            'matched' => false,
+            'position' => $startPos,
+            'expected' => $this
         ];
     }
 
