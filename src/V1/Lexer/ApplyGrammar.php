@@ -45,6 +45,7 @@ namespace GanbaroDigital\TextParser\V1\Lexer;
 
 use GanbaroDigital\TextParser\V1\Grammars\Grammar;
 use GanbaroDigital\TextParser\V1\Grammars\Token;
+use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
 
 class ApplyGrammar
 {
@@ -55,14 +56,25 @@ class ApplyGrammar
      *         our dictionary of grammars
      * @param  string $grammarName
      *         the grammar to start our match against
-     * @param  string $text
+     * @param  string|resource $text
      *         the text to match
+     * @param  string $label
+     *         a name or description of $text
+     * @param  LexAdjuster $adjuster
+     *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function to($grammars, $grammarName, $text)
+    public function to($grammars, $grammarName, $text, $label, LexAdjuster $adjuster = null)
     {
+        $scanner = StreamScanner::newFrom($text, $label);
+
+        // provide a no-op Adjuster if needed
+        if ($adjuster === null) {
+            $adjuster = new NoopAdjuster;
+        }
+
         // we're just a bit of syntactic sugar :)
-        return $grammars[$grammarName]->matchAgainst($grammars, $grammarName, $text);
+        return $grammars[$grammarName]->matchAgainst($grammars, $grammarName, $scanner, $adjuster);
     }
 }
