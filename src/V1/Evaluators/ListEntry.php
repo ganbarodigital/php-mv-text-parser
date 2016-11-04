@@ -48,10 +48,12 @@ use ArrayAccess;
 class ListEntry
 {
     private $key;
+    private $default;
 
-    public function __construct($key)
+    public function __construct($key, $default = null)
     {
         $this->key = $key;
+        $this->default = $default;
     }
 
     public function __invoke($list)
@@ -65,6 +67,6 @@ class ListEntry
             return $list[$this->key];
         }
 
-        return null;
+        return $this->default;
     }
 }
