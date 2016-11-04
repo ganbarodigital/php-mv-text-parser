@@ -5,6 +5,8 @@
 * Added support for defining grammers
   - added `GrammarRule` interface
   - added `Token` grammar
+* Added support for changing how a grammar is tokenised
+  - added `LexAdjuster` interface
 * Added some pre-defined tokens to save you having to define them in every project
   - added `T_AMPERSAND` lazy-match terminal token
   - added `T_ASTERISK` lazy-match terminal token
