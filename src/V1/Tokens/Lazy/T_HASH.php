@@ -52,6 +52,6 @@ class T_HASH extends PrefixToken
 {
     public function __construct()
     {
-        parent::__construct("T_HASH", '#');
+        parent::__construct('#');
     }
 }
