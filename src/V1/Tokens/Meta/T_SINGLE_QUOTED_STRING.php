@@ -50,8 +50,8 @@ use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
  */
 class T_SINGLE_QUOTED_STRING extends RegexToken
 {
-    public function __construct(callable $marshall = null)
+    public function __construct(callable $evaluator = null)
     {
-        parent::__construct("T_SINGLE_QUOTED_STRING", '/\'([^\\\']|\\\\|\\\')*\'/', $marshall);
+        parent::__construct('/\'([^\\\']|\\\\|\\\')*\'/', 1024, $evaluator);
     }
 }
