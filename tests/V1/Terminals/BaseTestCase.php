@@ -169,7 +169,9 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
         if ($hasExpectedValue) {
             $actualValue = $actualMatch['value']->evaluate();
         }
-        $actualRemaining = $scanner->readRemainingBytes();
+        if (strlen($remainingBytes) > 0) {
+            $actualRemaining = $scanner->readRemainingBytes();
+        }
 
         // ----------------------------------------------------------------
         // test the results
@@ -177,7 +179,9 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
         if ($hasExpectedValue) {
             $this->assertEquals($expectedValue, $actualValue);
         }
-        $this->assertEquals($expectedRemaining, $actualRemaining);
+        if (strlen($remainingBytes) > 0) {
+            $this->assertEquals($expectedRemaining, $actualRemaining);
+        }
     }
 
     /**
