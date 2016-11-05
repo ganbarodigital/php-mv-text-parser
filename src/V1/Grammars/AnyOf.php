@@ -129,7 +129,7 @@ class AnyOf implements GrammarRule
         foreach ($this->buildingBlocks as $buildingBlock) {
             $matches = $buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
             if ($matches['matched']) {
-                $adjuster->adjustAfterMatch($scanner);
+                $adjuster->adjustAfterMatch($scanner, $this, $matches['hasValue'], $matches['value']);
                 return $matches;
             }
 

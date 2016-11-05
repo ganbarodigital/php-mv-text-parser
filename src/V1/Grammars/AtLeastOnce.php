@@ -137,9 +137,6 @@ class AtLeastOnce implements GrammarRule
                 $values[] = $matches['value'];
             }
 
-            // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner);
-
             $matches = $this->separator->matchAgainst($grammars, 'separator', $scanner, $adjuster);
             if (!$matches['matched']) {
                 break;
@@ -148,9 +145,11 @@ class AtLeastOnce implements GrammarRule
             if ($matches['hasValue']) {
                 $values[] = $matches['value'];
             }
+        }
 
+        if ($hasMatched) {
             // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner);
+            $adjuster->adjustAfterMatch($scanner, $this, count($values) > 0, $values);
         }
 
         // did we match anything?

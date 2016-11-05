@@ -43,6 +43,7 @@
 
 namespace GanbaroDigital\TextParser\V1\Lexer;
 
+use GanbaroDigital\TextParser\V1\Grammars\GrammarRule;
 use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 interface LexAdjuster
@@ -63,7 +64,13 @@ interface LexAdjuster
      *
      * @param  Scanner $scanner
      *         the scanner we are lexing against
+     * @param  GrammarRule $grammar
+     *         the rule that matched
+     * @param  bool $hasValue
+     *         did the match produce a value?
+     * @param  mixed $value
+     *         the value that matched (or NULL if $hasValue is false)
      * @return void
      */
-    public function adjustAfterMatch(Scanner $scanner);
+    public function adjustAfterMatch(Scanner $scanner, GrammarRule $grammar, $hasValue, $value);
 }

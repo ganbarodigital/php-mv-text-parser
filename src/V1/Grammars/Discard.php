@@ -117,7 +117,7 @@ class Discard implements GrammarRule
         $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
         if ($matches['matched']) {
             // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner);
+            $adjuster->adjustAfterMatch($scanner, $this, false, null);
 
             $matches['hasValue'] = false;
             $matches['value'] = new Lexeme($lexemeName, null);

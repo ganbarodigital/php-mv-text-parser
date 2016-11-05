@@ -163,7 +163,7 @@ class PrefixToken implements TerminalRule
             $scanner->moveBytes($this->prefixLen);
 
             // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner);
+            $adjuster->adjustAfterMatch($scanner, $this, true, $this->prefix);
 
             return [
                 'matched' => true,

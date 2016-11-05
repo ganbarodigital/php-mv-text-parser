@@ -173,7 +173,7 @@ class RegexToken implements TerminalRule
             // have we consumed anything from the scanner?
             if (empty($matches[0])) {
                 // make any necessary changes to the input stream
-                $adjuster->adjustAfterMatch($scanner);
+                $adjuster->adjustAfterMatch($scanner, $this, false, null);
 
                 return [
                     'matched' => true,
@@ -187,7 +187,7 @@ class RegexToken implements TerminalRule
             $scanner->moveBytes(strlen($matches[0]));
 
             // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner);
+            $adjuster->adjustAfterMatch($scanner, $this, true, $matches[0]);
 
             return [
                 'matched' => true,

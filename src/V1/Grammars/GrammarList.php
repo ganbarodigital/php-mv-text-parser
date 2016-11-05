@@ -132,10 +132,10 @@ class GrammarList implements GrammarRule
             if ($matches['hasValue']) {
                 $values[] = $matches['value'];
             }
-
-            // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner);
         }
+
+        // make any necessary changes to the input stream
+        $adjuster->adjustAfterMatch($scanner, $this, count($values) > 0, $values);
 
         // if we get here, then everything in our list matched :)
         if (empty($values)) {

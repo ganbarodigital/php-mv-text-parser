@@ -107,8 +107,12 @@ class Optional implements GrammarRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // make any necessary changes to the input stream
+        $adjuster->adjustBeforeStartPosition($scanner);
+
         // does our optional grammar match?
         $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
+        $adjuster->adjustAfterMatch($scanner, $this, $matches['hasValue'], $matches['value']);
         if ($matches['matched']) {
             return $matches;
         }

@@ -43,6 +43,7 @@
 
 namespace GanbaroDigital\TextParser\V1\Lexer;
 
+use GanbaroDigital\TextParser\V1\Grammars\GrammarRule;
 use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
@@ -69,26 +70,19 @@ class NoopAdjuster implements LexAdjuster
 
     /**
      * make any desired changes to the input stream after our grammar rule
-     * has made a note of the input stream's current position
-     *
-     * @param  Scanner $scanner
-     *         the scanner we are lexing against
-     * @return void
-     */
-    public function adjustAfterStartPosition(Scanner $scanner)
-    {
-        // do nothing
-    }
-
-    /**
-     * make any desired changes to the input stream after our grammar rule
      * has consumed its match from the input stream
      *
      * @param  Scanner $scanner
      *         the scanner we are lexing against
+     * @param  GrammarRule $grammar
+     *         the rule that matched
+     * @param  bool $hasValue
+     *         did the match produce a value?
+     * @param  mixed $value
+     *         the value that matched (or NULL if $hasValue is false)
      * @return void
      */
-    public function adjustAfterMatch(Scanner $scanner)
+    public function adjustAfterMatch(Scanner $scanner, GrammarRule $grammar, $hasValue, $value)
     {
         // do nothing
     }

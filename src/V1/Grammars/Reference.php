@@ -114,8 +114,10 @@ class Reference implements GrammarRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        $grammar = $grammars[$this->buildingBlock];
+        // special case - we DO NOT adjust the input stream here,
+        // as we are just an alias for another GrammarRule
 
+        $grammar = $grammars[$this->buildingBlock];
         $matches = $grammar->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
         if ($matches['matched']) {
             return [
