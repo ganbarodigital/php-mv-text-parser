@@ -34,22 +34,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @category  Libraries
- * @package   TextParser\V1\Grammars
+ * @package   TextParser\V1\Terminals
  * @author    Stuart Herbert <stuherbert@ganbarodigital.com>
  * @copyright 2016-present Ganbaro Digital Ltd www.ganbarodigital.com
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigital\TextParser\V1\Grammars;
+namespace GanbaroDigital\TextParser\V1\Terminals\Meta;
 
+use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
 use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
 use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
 /**
  * match the remaining text on the input
  */
-class RemainingText implements TerminalRule
+class T_REMAINING implements TerminalRule
 {
     /**
      * how we evaluate our return value
@@ -96,26 +98,36 @@ class RemainingText implements TerminalRule
      *         the name to assign to any lexeme we create
      * @param  Scanner $scanner
      *         the text to match
-     * @param  int $flags
+     * @param  LexAdjuster $adjuster
      *         modify the lexer behaviour to suit
      * @return array
      *         details about what happened
      */
-    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, $flags = 0)
+    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
+        // adjust the input stream before we get started
+        $adjuster->adjustBeforeStartPosition($scanner);
+
+        // remember where we started from
+        $startPos = $scanner->getPosition();
+
         // we only match if there is any text left
-        if ($scanner->isEndOfInput()) {
+        if ($scanner->isAtEndOfInput()) {
             return [
                 'matched' => false,
                 'expected' => $this,
-                'position' => $scanner->getPosition()
+                'position' => $startPos
             ];
         }
+
+        $remainingBytes = $scanner->readRemainingBytes();
+        $adjuster->adjustAfterMatch($scanner, $this, true, $remainingBytes);
 
         return [
             'matched' => true,
             'hasValue' => true,
-            'value' => new Lexeme($lexemeName, $scanner->readRemainingBytes(), $this->evaluator),
+            'value' => new Lexeme($lexemeName, $remainingBytes, $this->evaluator),
+            'position' => $startPos
         ];
     }
 }
