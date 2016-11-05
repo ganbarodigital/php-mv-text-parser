@@ -69,6 +69,9 @@ class T_MINUS_Test extends BaseTestCase
             '3_minus',
             '4_minus',
             '10_minus',
+            'integer_negative',
+            'integer_negative_min',
+            'float_negative'
         ];
     }
 

@@ -45,7 +45,16 @@ function getTerminalDataSet()
 {
     $retval = [
         "empty" => [ "" ],
-        "number" => [ "123456789" ],
+        "integer_zero" => [ "0" ],
+        "integer_positive" => [ "100" ],
+        "integer_positive_max" => [ (string)PHP_INT_MAX ],
+        "integer_positive_signed" => [ "+100" ],
+        "integer_negative" => [ "-100" ],
+        "integer_negative_min" => [ (string)PHP_INT_MIN ],
+        "float_zero" => [ "0.0" ],
+        "float_positive" => [ "3.1415927" ],
+        "float_positive_signed" => [ "+100.10" ],
+        "float_negative" => [ "-100.10" ],
         "double_quoted_string" => [ '"@100"' ],
         "single_quoted_string" => [ "'@100'" ],
     ];

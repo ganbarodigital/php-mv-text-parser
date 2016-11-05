@@ -69,6 +69,8 @@ class T_PLUS_Test extends BaseTestCase
             '3_plus',
             '4_plus',
             '10_plus',
+            'integer_positive_signed',
+            'float_positive_signed',
         ];
     }
 

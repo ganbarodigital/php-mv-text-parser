@@ -137,7 +137,7 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-    protected function checkForMatches($text, $hasExpectedValue, $expectedValue)
+    protected function checkForMatches($text, $hasExpectedValue, $expectedValue, $remainingBytes = '100', $expectedEvaluator = null)
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -149,7 +149,7 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
         $expectedMatch = [
             "matched" => true,
             "hasValue" => true,
-            "value" => new Lexeme("unit", $expectedValue),
+            "value" => new Lexeme("unit", $expectedValue, $expectedEvaluator),
             "position" => new ScannerPosition(1, 0, 0),
         ];
         if (!$hasExpectedValue) {
@@ -157,8 +157,8 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
             $expectedMatch['value'] = null;
         }
 
-        $expectedRemaining = substr($text, strlen($expectedValue)) . '100';
-        $scanner = StreamScanner::newFromString($text . '100', 'unit test');
+        $expectedRemaining = substr($text, strlen($expectedValue)) . $remainingBytes;
+        $scanner = StreamScanner::newFromString($text . $remainingBytes, 'unit test');
 
         // ----------------------------------------------------------------
         // perform the change
@@ -184,7 +184,7 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
      * @covers ::matchAgainst
      * @dataProvider provideNonMatches
      */
-    protected function checkForNonMatches($text)
+    protected function checkForNonMatches($text, $remainingBytes = '100')
     {
         $language = [
             "unit" => $this->getUnitUnderTest()
@@ -195,7 +195,7 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
             "expected" => $language["unit"]
         ];
 
-        $expectedRemaining = $text . '100';
+        $expectedRemaining = $text . $remainingBytes;
         $scanner = StreamScanner::newFromString($expectedRemaining, 'unit test');
 
         // ----------------------------------------------------------------

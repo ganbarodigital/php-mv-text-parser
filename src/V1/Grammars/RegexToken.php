@@ -171,7 +171,7 @@ class RegexToken implements TerminalRule
         $matches = [];
         if (preg_match($this->tokenRegex, $text, $matches)) {
             // have we consumed anything from the scanner?
-            if (empty($matches[0])) {
+            if ($matches[0] === null) {
                 // make any necessary changes to the input stream
                 $adjuster->adjustAfterMatch($scanner, $this, false, null);
 
