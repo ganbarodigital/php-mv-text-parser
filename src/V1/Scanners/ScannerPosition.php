@@ -127,21 +127,4 @@ class ScannerPosition
     {
         return $this->streamPos;
     }
-
-    /**
-     * static factory method, returns a pre-built ScannerPosition for you that
-     * represents the start of a scanning stream
-     *
-     * @param int $lineNo
-     *        what line number are we starting from?
-     * @param int $lineOffset
-     *        how far along $lineNo are we starting from?
-     * @param int $streamPosition
-     *        where in the stream are we starting from?
-     * @return ScannerPosition
-     */
-    public static function newStartOfStream($lineNo = 1, $lineOffset = 0, $streamPosition = 0)
-    {
-        return new ScannerPosition($lineNo, $lineOffset, $streamPosition);
-    }
 }

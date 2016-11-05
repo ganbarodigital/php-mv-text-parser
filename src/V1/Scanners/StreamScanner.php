@@ -86,6 +86,27 @@ class StreamScanner implements Scanner
     private $streamPosition = 0;
 
     /**
+     * which line did we start scanning from?
+     *
+     * @var int
+     */
+    private $startLinePosition;
+
+    /**
+     * how far alone $this->startLinePosition did we start scanning from?
+     *
+     * @var int
+     */
+    private $startLineOffset;
+
+    /**
+     * how far in this stream did we start scanning from?
+     *
+     * @var int
+     */
+    private $startStreamPosition;
+
+    /**
      * how many spaces does a tab character take up?
      *
      * we use this to calculate the line position when we encounter tab
@@ -120,6 +141,11 @@ class StreamScanner implements Scanner
         $this->lineNo = $lineNo;
         $this->lineOffset = $lineOffset;
         $this->streamPosition = ftell($stream);
+
+        // remember where we started from, in case anyone wants to know
+        $this->startLineNo = $lineNo;
+        $this->startLineOffset = $lineOffset;
+        $this->startStreamPosition = $this->streamPosition;
 
         $this->label = $label;
         $this->tabSize = $tabSize;
@@ -505,5 +531,20 @@ class StreamScanner implements Scanner
         }
 
         throw new InvalidArgumentException("cannot make a stream scanner '{$label}' from your supplied value");
+    }
+
+    /**
+     * returns a ScannerPosition that represents the start position of
+     * this stream
+     *
+     * @return ScannerPosition
+     */
+    public function getStartPosition()
+    {
+        return new ScannerPosition(
+            $this->startLineNo,
+            $this->startLineOffset,
+            $this->startStreamPosition
+        );
     }
 }

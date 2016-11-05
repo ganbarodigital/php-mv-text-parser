@@ -161,4 +161,12 @@ interface Scanner
      * @return string
      */
     public function getLabel();
+
+    /**
+     * returns a ScannerPosition that represents the start position of
+     * this stream
+     *
+     * @return ScannerPosition
+     */
+    public function getStartPosition();
 }

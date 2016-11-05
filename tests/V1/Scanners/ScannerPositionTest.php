@@ -145,5 +145,4 @@ class ScannerPositionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedStreamPosition, $actualStreamPosition);
     }
-
 }

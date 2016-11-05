@@ -95,6 +95,27 @@ class StringScanner implements Scanner
     protected $inputPosition = 0;
 
     /**
+     * which line did we start scanning from?
+     *
+     * @var int
+     */
+    private $startLinePosition;
+
+    /**
+     * how far alone $this->startLinePosition did we start scanning from?
+     *
+     * @var int
+     */
+    private $startLineOffset;
+
+    /**
+     * how far in this string did we start scanning from?
+     *
+     * @var int
+     */
+    private $startInputPosition;
+
+    /**
      * how many spaces does a tab character take up?
      *
      * we use this to calculate the line position when we encounter tab
@@ -130,6 +151,11 @@ class StringScanner implements Scanner
         $this->lineNo = $lineNo;
         $this->lineOffset = $lineOffset;
         $this->inputPosition = 0;
+
+        // remember where we started from, in case anyone wants to know
+        $this->startLineNo = $lineNo;
+        $this->startLineOffset = $lineOffset;
+        $this->startInputPosition = $this->inputPosition;
 
         $this->label = $label;
         $this->tabSize = $tabSize;
@@ -424,5 +450,20 @@ class StringScanner implements Scanner
     public function getLabel()
     {
         return $this->label;
+    }
+
+    /**
+     * returns a ScannerPosition that represents the start position of
+     * this stream
+     *
+     * @return ScannerPosition
+     */
+    public function getStartPosition()
+    {
+        return new ScannerPosition(
+            $this->startLineNo,
+            $this->startLineOffset,
+            $this->startInputPosition
+        );
     }
 }

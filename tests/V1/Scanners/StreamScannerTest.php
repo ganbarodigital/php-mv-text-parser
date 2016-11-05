@@ -1474,7 +1474,7 @@ class StreamScannerTest extends PHPUnit_Framework_TestCase
         $actualStreamOffset2 = ftell($streamResource);
 
         // finally, let's try and grab just the first line now
-        $unit->setPosition(ScannerPosition::newStartOfStream());
+        $unit->setPosition($unit->getStartPosition());
         $this->assertEquals(0, ftell($streamResource));
 
         $actualBytes1 = $unit->readBytes(strlen($expectedBytes1));
@@ -1639,5 +1639,40 @@ class StreamScannerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedPosition, $actualPosition);
         $this->assertEquals($expectedRemainder, $actualRemainder);
+    }
+
+    /**
+     * @covers ::getStartPosition
+     */
+    public function test_getStartPosition_returns_location_we_started_scanning_from()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+
+        $expectedBytes = "hello, world!\n";
+        $expectedRemainder = "what a lovely day today";
+
+        $unit = StreamScanner::newfromString($expectedBytes . $expectedRemainder, 'unit test');
+        $expectedPosition = $unit->getPosition();
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        // move along, to change the position in the input stream
+        $unit->readBytes(strlen($expectedBytes));
+        $intermediatePosition = $unit->getPosition();
+        $this->assertNotEquals($expectedPosition, $intermediatePosition);
+
+        // now perform a read, to prove the position moved
+        $actualRemainder = $unit->readRemainingBytes();
+        $this->assertEquals($expectedRemainder, $actualRemainder);
+
+        // finally, ask the scanner where it started from
+        $actualPosition = $unit->getStartPosition();
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        $this->assertEquals($expectedPosition, $actualPosition);
     }
 }
