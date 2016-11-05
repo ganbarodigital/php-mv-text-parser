@@ -113,9 +113,6 @@ class Discard implements GrammarRule
         // keep track of where we started from
         $startPos = $scanner->getPosition();
 
-        // make any necessary changes to the input stream
-        $adjuster->adjustAfterStartPosition($scanner);
-
         // does our optional grammar match?
         $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
         if ($matches['matched']) {

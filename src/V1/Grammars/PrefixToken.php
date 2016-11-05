@@ -146,9 +146,6 @@ class PrefixToken implements TerminalRule
         // keep track of where we are
         $startPos = $scanner->getPosition();
 
-        // make any necessary changes to the input stream
-        $adjuster->adjustAfterStartPosition($scanner);
-
         // the text we want to check
         $text = $scanner->readBytesAhead($this->prefixLen);
 

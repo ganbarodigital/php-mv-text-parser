@@ -115,9 +115,6 @@ class GrammarList implements GrammarRule
         // remember where we started from
         $startPos = $scanner->getPosition();
 
-        // make any necessary changes to the input stream
-        $adjuster->adjustAfterStartPosition($scanner);
-
         // keep track of the individual values that matched
         $values = [];
 

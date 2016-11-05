@@ -118,9 +118,6 @@ class AnyOf implements GrammarRule
         // remember where we are
         $startPos = $scanner->getPosition();
 
-        // make any necessary changes after
-        $adjuster->adjustAfterStartPosition($scanner);
-
         // we're going to keep track of the best possible (failed) match
         // found, to help with reporting problems
         $bestFailedMatch = [

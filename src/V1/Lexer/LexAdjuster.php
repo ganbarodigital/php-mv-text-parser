@@ -59,16 +59,6 @@ interface LexAdjuster
 
     /**
      * make any desired changes to the input stream after our grammar rule
-     * has made a note of the input stream's current position
-     *
-     * @param  Scanner $scanner
-     *         the scanner we are lexing against
-     * @return void
-     */
-    public function adjustAfterStartPosition(Scanner $scanner);
-
-    /**
-     * make any desired changes to the input stream after our grammar rule
      * has consumed its match from the input stream
      *
      * @param  Scanner $scanner

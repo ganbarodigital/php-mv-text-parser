@@ -96,9 +96,6 @@ class T_WHITESPACE implements TerminalRule
         // remember where we started from
         $startPos = $scanner->getPosition();
 
-        // make any adjustments required before we attempt to match
-        $adjuster->adjustAfterStartPosition($scanner);
-
         // we need this, to extract the matching whitespace
         $matchStart = $scanner->getPosition();
 

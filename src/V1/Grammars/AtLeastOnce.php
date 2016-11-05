@@ -122,9 +122,6 @@ class AtLeastOnce implements GrammarRule
         // keep track of where we started from
         $startPos = $scanner->getPosition();
 
-        // make any necessary changes after
-        $adjuster->adjustAfterStartPosition($scanner);
-
         // keep track of what has matched
         $values = [];
         $hasMatched = false;

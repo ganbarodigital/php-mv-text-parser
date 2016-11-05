@@ -165,9 +165,6 @@ class RegexToken implements TerminalRule
         // remember where we started from
         $startPos = $scanner->getPosition();
 
-        // make any necessary changes to the input stream
-        $adjuster->adjustAfterStartPosition($scanner);
-
         // go and get some text
         $text = $scanner->readBytesAhead($this->scanLength);
 
