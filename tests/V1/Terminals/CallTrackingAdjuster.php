@@ -41,53 +41,68 @@
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigitalTest\TextParser\V1\Meta\Tokens;
+namespace GanbaroDigitalTest\TextParser\V1\Terminals;
 
-use GanbaroDigital\TextParser\V1\Terminals\Meta\T_EMPTY;
-use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
+use GanbaroDigital\TextParser\V1\Grammars\GrammarRule;
+use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
+use GanbaroDigital\TextParser\V1\Scanners\Scanner;
 
-/**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_EMPTY
- */
-class T_EMPTY_Test extends BaseTestCase
+class CallTrackingAdjuster implements LexAdjuster
 {
-    protected function getUnitUnderTest()
-    {
-        return new T_EMPTY;
-    }
+    private $calls = [];
 
-    protected function getExpectedPseudoBNF()
+    /**
+     * make any desired changes to the input stream before our grammar rule
+     * makes a note of the input stream's current position
+     *
+     * @param  Scanner $scanner
+     *         the scanner we are lexing against
+     * @return void
+     */
+    public function adjustBeforeStartPosition(Scanner $scanner)
     {
-        return "";
-    }
-
-    protected function getDatasetKeysToMatch()
-    {
-        return array_keys(getTerminalDataset());
+        $this->calls[] = __FUNCTION__;
     }
 
     /**
-     * @coversNothing
+     * make any desired changes to the input stream after our grammar rule
+     * has made a note of the input stream's current position
+     *
+     * @param  Scanner $scanner
+     *         the scanner we are lexing against
+     * @return void
      */
-    public function test_can_instantiate()
+    public function adjustAfterStartPosition(Scanner $scanner)
     {
-        parent::test_can_instantiate();
+        $this->calls[] = __FUNCTION__;
     }
 
     /**
-     * @covers ::matchAgainst
+     * make any desired changes to the input stream after our grammar rule
+     * has consumed its match from the input stream
+     *
+     * @param  Scanner $scanner
+     *         the scanner we are lexing against
+     * @param  GrammarRule $grammar
+     *         the rule that matched
+     * @param  bool $hasValue
+     *         did the match produce a value?
+     * @param  mixed $value
+     *         the value that matched (or NULL if $hasValue is false)
+     * @return void
      */
-    public function test_matches_empty_string()
+    public function adjustAfterMatch(Scanner $scanner, GrammarRule $grammar, $hasValue, $value)
     {
-        $this->checkForMatches("", false, "");
+        $this->calls[] = __FUNCTION__;
     }
 
     /**
-     * @covers ::matchAgainst
-     * @dataProvider provideMatches
+     * return a list of when, and how, we were called
+     *
+     * @return array
      */
-    public function test_matches_everything_else($text)
+    public function getCallsList()
     {
-        $this->checkForMatches($text, false, '');
+        return $this->calls;
     }
 }

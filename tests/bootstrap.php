@@ -37,10 +37,14 @@
 // make sure composer autoloading is there
 require_once(__DIR__ . '/../vendor/autoload.php');
 
+// any extra test code, we have to load it ourselves
+require_once(__DIR__ . '/V1/Terminals/BaseTestCase.php');
+require_once(__DIR__ . '/V1/Terminals/CallTrackingAdjuster.php');
 
 function getTerminalDataSet()
 {
     $retval = [
+        "empty" => [ "" ],
         "number" => [ "123456789" ],
         "double_quoted_string" => [ '"@100"' ],
         "single_quoted_string" => [ "'@100'" ],
