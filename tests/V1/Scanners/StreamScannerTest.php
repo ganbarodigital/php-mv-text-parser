@@ -109,6 +109,27 @@ class StreamScannerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::newFrom
+     * @expectedException InvalidArgumentException
+     * @dataProvider provideNonStreams
+     */
+    public function test_newFrom_throws_InvalidArgumentException_if_non_stream_supplied($input)
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        StreamScanner::newFrom($input, "unit test");
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        $this->markTestIncomplete("not implemented yet");
+    }
+
+    /**
      * @covers ::__construct
      */
     public function test_can_instantiate()
@@ -131,6 +152,27 @@ class StreamScannerTest extends PHPUnit_Framework_TestCase
         // test the results
 
         $this->assertInstanceOf(StreamScanner::class, $unit);
+    }
+
+    /**
+     * @covers ::__construct
+     * @expectedException InvalidArgumentException
+     * @dataProvider provideNonStreams
+     */
+    public function test_constructor_throws_InvalidArgumentException_if_non_stream_supplied($input)
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        StreamScanner::newFrom($input, "unit test");
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        $this->markTestIncomplete("not implemented yet");
     }
 
     /**
@@ -1674,5 +1716,19 @@ class StreamScannerTest extends PHPUnit_Framework_TestCase
         // test the results
 
         $this->assertEquals($expectedPosition, $actualPosition);
+    }
+
+    public function provideNonStreams()
+    {
+        return [
+            "null" => [ null ],
+            "array" => [ [ "hello, world" ] ],
+            "true" => [ true ],
+            "false" => [ false ],
+            "callable" => [ function() { return "hello, world"; } ],
+            "double" => [ 3.1415927 ],
+            "integer" => [ 100 ],
+            "object" => [ (object)[ "hello, world" ] ],
+        ];
     }
 }
