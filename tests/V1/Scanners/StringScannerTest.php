@@ -489,6 +489,30 @@ class StringScannerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::readRemainingBytes
+     * @covers ::isAtEndOfInput
+     */
+    public function test_readRemainingBytes_works_as_first_operation_on_scanner()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+
+        $expectedRemainder = "hello, world!\nwhat a lovely day";
+        $unit = new StringScanner($expectedRemainder, 'unit test');
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        $actualRemainder = $unit->readRemainingBytes();
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->assertTrue($unit->isAtEndOfInput());
+    }
+
+    /**
      * @covers ::readBytesAhead
      */
     public function test_readBytesAhead_can_read_requested_number_of_bytes()
@@ -1381,5 +1405,32 @@ class StringScannerTest extends PHPUnit_Framework_TestCase
         // test the results
 
         $this->assertEquals($expectedPosition, $actualPosition);
+    }
+
+    /**
+     * @covers ::isAtEndOfInput
+     */
+    public function test_isAtEndOfInput_does_not_move_scanner_position()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+
+        $expectedBytes = "hello, world!\nwhat a lovely day today";
+
+        $unit = new StringScanner($expectedBytes, 'unit test');
+        $expectedPosition = $unit->getPosition();
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        $unit->isAtEndOfInput();
+        $actualPosition = $unit->getPosition();
+        $actualBytes = $unit->readRemainingBytes();
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        $this->assertEquals($expectedPosition, $actualPosition);
+        $this->assertEquals($expectedBytes, $actualBytes);
     }
 }

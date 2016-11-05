@@ -79,18 +79,11 @@ class StreamScanner implements Scanner
     private $lineOffset = 0;
 
     /**
-     * keep track of where in the stream we currently are
-     *
-     * @var integer
-     */
-    private $streamPosition = 0;
-
-    /**
      * which line did we start scanning from?
      *
      * @var int
      */
-    private $startLinePosition;
+    private $startLineNo;
 
     /**
      * how far alone $this->startLinePosition did we start scanning from?
@@ -140,12 +133,11 @@ class StreamScanner implements Scanner
         $this->stream = $stream;
         $this->lineNo = $lineNo;
         $this->lineOffset = $lineOffset;
-        $this->streamPosition = ftell($stream);
 
         // remember where we started from, in case anyone wants to know
         $this->startLineNo = $lineNo;
         $this->startLineOffset = $lineOffset;
-        $this->startStreamPosition = $this->streamPosition;
+        $this->startStreamPosition = ftell($stream);
 
         $this->label = $label;
         $this->tabSize = $tabSize;
@@ -238,9 +230,6 @@ class StreamScanner implements Scanner
         // shorthand
         $bytesCount = strlen($bytesRead);
 
-        // move our stream position
-        $this->streamPosition += $bytesCount;
-
         // have we moved across any lines?
         $matches = [];
         if (preg_match_all("/\n/", $bytesRead, $matches, PREG_OFFSET_CAPTURE)) {
@@ -289,19 +278,17 @@ class StreamScanner implements Scanner
     public function movePastWhitespaceOnCurrentLine()
     {
         // we need to keep track of whether the stream has moved or not
-        $startPos = $this->streamPosition;
+        $startPos = ftell($this->stream);
 
         // read from the stream until we hit EOF
         while (($c = fgetc($this->stream)) !== false) {
             // do we have whitespace?
             if ($c === ' ') {
                 $this->lineOffset++;
-                $this->streamPosition++;
             }
             // is this a tab character?
             else if ($c === "\t") {
                 $this->lineOffset += ($this->tabSize - ($this->lineOffset % $this->tabSize));
-                $this->streamPosition++;
             }
             else {
                 // no, so we're done here
@@ -315,7 +302,7 @@ class StreamScanner implements Scanner
         }
 
         // all done
-        return ($startPos <> $this->streamPosition);
+        return ($startPos <> ftell($this->stream));
     }
 
     /**
@@ -331,25 +318,22 @@ class StreamScanner implements Scanner
     public function movePastWhitespace()
     {
         // we need to keep track of whether the stream has moved or not
-        $startPos = $this->streamPosition;
+        $startPos = ftell($this->stream);
 
         // read from the stream until we hit EOF
         while (($c = fgetc($this->stream)) !== false) {
             // do we have whitespace?
             if ($c === ' ' || $c === "\r") {
                 $this->lineOffset++;
-                $this->streamPosition++;
             }
             // is this a tab character?
             else if ($c === "\t") {
                 $this->lineOffset += ($this->tabSize - ($this->lineOffset % $this->tabSize));
-                $this->streamPosition++;
             }
             // have we moved onto the next line?
             else if ($c === "\n") {
                 $this->lineNo++;
                 $this->lineOffset = 0;
-                $this->streamPosition++;
             }
             else {
                 // no, so we're done here
@@ -363,7 +347,7 @@ class StreamScanner implements Scanner
         }
 
         // all done
-        return ($startPos <> $this->streamPosition);
+        return ($startPos <> ftell($this->stream));
     }
 
     /**
@@ -396,7 +380,7 @@ class StreamScanner implements Scanner
         //
         // however, this operation is risky in its own right. what happens if
         // the stream blocks forever on us?
-        $bytes = fgets($this->stream);
+        $bytes = fgetc($this->stream);
         if ($bytes !== false) {
             fseek($this->stream, -1, SEEK_CUR);
             return false;
@@ -413,7 +397,7 @@ class StreamScanner implements Scanner
      */
     public function getPosition()
     {
-        return new ScannerPosition($this->lineNo, $this->lineOffset, $this->streamPosition);
+        return new ScannerPosition($this->lineNo, $this->lineOffset, ftell($this->stream));
     }
 
     /**
@@ -430,7 +414,6 @@ class StreamScanner implements Scanner
         // keep track of where we now are
         $this->lineNo = $position->getLineNumber();
         $this->lineOffset = $position->getLineOffset();
-        $this->streamPosition = $position->getStreamPosition();
     }
 
     /**
