@@ -53,6 +53,6 @@ class T_STERLING extends RegexToken
 {
     public function __construct()
     {
-        parent::__construct('/£|' . chr(156) . '/');
+        parent::__construct('/' . chr(156) . '|£/');
     }
 }

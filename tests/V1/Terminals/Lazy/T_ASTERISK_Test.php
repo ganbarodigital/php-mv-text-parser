@@ -44,160 +44,49 @@
 namespace GanbaroDigitalTest\TextParser\V1\Terminals\Lazy;
 
 use GanbaroDigital\TextParser\V1\Terminals\Lazy\T_ASTERISK;
-use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
-use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
-use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
-use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
-use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
-
-use PHPUnit_Framework_TestCase;
+use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
  * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Lazy\T_ASTERISK
  */
-class T_ASTERISK_Test extends PHPUnit_Framework_TestCase
+class T_ASTERISK_Test extends BaseTestCase
 {
-    /**
-     * @covers ::__construct
-     */
-    public function test_can_instantiate()
+    protected function getUnitUnderTest()
     {
-        // ----------------------------------------------------------------
-        // setup your test
+        return new T_ASTERISK;
+    }
 
+    protected function getExpectedPseudoBNF()
+    {
+        return "*";
+    }
 
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_ASTERISK;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertTrue(is_object($unit));
+    protected function getDatasetKeysToMatch()
+    {
+        return [
+            '1_asterisk',
+            '2_asterisk',
+            '3_asterisk',
+            '4_asterisk',
+            '10_asterisk',
+        ];
     }
 
     /**
-     * @covers ::__construct
-     */
-    public function test_is_TerminalRule()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_ASTERISK;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertInstanceOf(TerminalRule::class, $unit);
-    }
-
-    /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideMatches
      */
-    public function test_matches_an_assignment($text)
+    public function test_matches_an_asterisk_character($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_ASTERISK
-        ];
-
-        $expectedMatch = [
-            "matched" => true,
-            "hasValue" => true,
-            "value" => new Lexeme('unit', '*'),
-            "position" => new ScannerPosition(1,0,0)
-        ];
-        $expectedRemainder = substr($text, 1) . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForMatches($text, true, "*");
     }
 
     /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideNonMatches
      */
     public function test_does_not_match_anything_else($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_ASTERISK
-        ];
-
-        $expectedMatch = [
-            "matched" => false,
-            "position" => new ScannerPosition(1,0,0),
-            "expected" => $language['unit']
-        ];
-        $expectedRemainder = $text . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForNonMatches($text);
     }
-
-    public function provideMatches()
-    {
-        // reuse our standard test set
-        $dataset = getTerminalDataset();
-
-        // send back the items that are supposed to match!
-        $retval = [
-            '1_asterisk' => $dataset['1_asterisk'],
-            '2_asterisk' => $dataset['2_asterisk'],
-            '3_asterisk' => $dataset['3_asterisk'],
-            '4_asterisk' => $dataset['4_asterisk'],
-            '10_asterisk' => $dataset['10_asterisk'],
-        ];
-
-        // all done
-        return $retval;
-    }
-
-    public function provideNonMatches()
-    {
-        // reuse our standard test set
-        $retval = getTerminalDataset();
-
-        // strip out the things that are supposed to match!
-        unset($retval['1_asterisk']);
-        unset($retval['2_asterisk']);
-        unset($retval['3_asterisk']);
-        unset($retval['4_asterisk']);
-        unset($retval['10_asterisk']);
-
-        // all done
-        return $retval;
-    }
-
 }

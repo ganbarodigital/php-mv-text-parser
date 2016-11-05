@@ -114,6 +114,8 @@ class T_WHITESPACE implements TerminalRule
         $scanner->setPosition($matchStart);
         $value = $scanner->readBytes($matchEnd->getStreamPosition() - $matchStart->getStreamPosition());
 
+        $adjuster->adjustAfterMatch($scanner, $this, true, $value);
+
         return [
             'matched' => true,
             'hasValue' => true,

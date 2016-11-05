@@ -44,191 +44,59 @@
 namespace GanbaroDigitalTest\TextParser\V1\Terminals\Meta;
 
 use GanbaroDigital\TextParser\V1\Terminals\Meta\T_DOUBLE_QUOTED_STRING;
-use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
-use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
-use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
-use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
-use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
-use PHPUnit_Framework_TestCase;
+use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
  * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_DOUBLE_QUOTED_STRING
  */
-class T_DOUBLE_QUOTED_STRING_Test extends PHPUnit_Framework_TestCase
+class T_DOUBLE_QUOTED_STRING_Test extends BaseTestCase
 {
-    /**
-     * @covers ::__construct
-     */
-    public function test_can_instantiate()
+    protected function getUnitUnderTest()
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_DOUBLE_QUOTED_STRING;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertTrue(is_object($unit));
+        return new T_DOUBLE_QUOTED_STRING;
     }
 
-    /**
-     * @covers ::__construct
-     */
-    public function test_is_TerminalRule()
+    protected function getExpectedPseudoBNF()
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_DOUBLE_QUOTED_STRING;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertInstanceOf(TerminalRule::class, $unit);
+        return 'regex /^"(?:[^"]|\|\")*"/';
     }
 
-    /**
-     * @coversNothing
-     * @dataProvider provideMatches
-     */
-    public function test_matches_a_double_quoted_string($text)
+    protected function getDatasetKeysToMatch()
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_DOUBLE_QUOTED_STRING
+        return [
+            'double_quoted_string',
+            '2_double_quote',
+            '3_double_quote',
+            '4_double_quote',
+            '10_double_quote',
         ];
-
-        $expectedMatch = [
-            "matched" => true,
-            "hasValue" => true,
-            "value" => new Lexeme('unit', $text),
-            "position" => new ScannerPosition(1,0,0)
-        ];
-        $expectedRemainder = '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
     }
 
     /**
-     * @coversNothing
+     * @covers ::matchAgainst
+     */
+    public function test_matches_a_double_quoted_string()
+    {
+        $text = '"@100" 150';
+
+        $this->checkForMatches($text, true, '"@100"');
+    }
+
+    /**
+     * @covers ::matchAgainst
      */
     public function test_ignores_a_second_double_quoted_string()
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
         $text = '"@100", "@101"';
-
-        $language = [
-            'unit' => new T_DOUBLE_QUOTED_STRING
-        ];
-
-        $expectedMatch = [
-            "matched" => true,
-            "hasValue" => true,
-            "value" => new Lexeme('unit', '"@100"'),
-            "position" => new ScannerPosition(1,0,0)
-        ];
-        $expectedRemainder = ', "@101"';
-        $scanner = StreamScanner::newFrom($text, 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForMatches($text, true, '"@100"');
     }
 
     /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideNonMatches
      */
     public function test_does_not_match_anything_else($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_DOUBLE_QUOTED_STRING
-        ];
-
-        $expectedMatch = [
-            "matched" => false,
-            "position" => new ScannerPosition(1,0,0),
-            "expected" => $language['unit']
-        ];
-        $expectedRemainder = $text . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForNonMatches($text);
     }
-
-    public function provideMatches()
-    {
-        // reuse our standard test set
-        $dataset = getTerminalDataset();
-
-        // send back the items that are supposed to match!
-        $retval = [
-            'double_quoted_string' => $dataset['double_quoted_string'],
-        ];
-
-        // all done
-        return $retval;
-    }
-
-    public function provideNonMatches()
-    {
-        // reuse our standard test set
-        $retval = getTerminalDataset();
-
-        // strip out the things that are supposed to match!
-        unset($retval['double_quoted_string']);
-        unset($retval['2_double_quote']);
-        unset($retval['3_double_quote']);
-        unset($retval['4_double_quote']);
-        unset($retval['10_double_quote']);
-
-        // all done
-        return $retval;
-    }
-
 }

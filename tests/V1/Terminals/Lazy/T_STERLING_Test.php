@@ -44,56 +44,37 @@
 namespace GanbaroDigitalTest\TextParser\V1\Terminals\Lazy;
 
 use GanbaroDigital\TextParser\V1\Terminals\Lazy\T_STERLING;
-use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
-use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
-use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
-use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
-use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
-use PHPUnit_Framework_TestCase;
+use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
  * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Lazy\T_STERLING
  */
-class T_STERLING_Test extends PHPUnit_Framework_TestCase
+class T_STERLING_Test extends BaseTestCase
 {
-    /**
-     * @covers ::__construct
-     */
-    public function test_can_instantiate()
+    protected function getUnitUnderTest()
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_STERLING;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertTrue(is_object($unit));
+        return new T_STERLING;
     }
 
-    /**
-     * @covers ::__construct
-     */
-    public function test_is_TerminalRule()
+    protected function getExpectedPseudoBNF()
     {
-        // ----------------------------------------------------------------
-        // setup your test
+        return "regex /" . chr(156) . '|£/';
+    }
 
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_STERLING;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertInstanceOf(TerminalRule::class, $unit);
+    protected function getDatasetKeysToMatch()
+    {
+        return [
+            '1_sterling_ascii',
+            '2_sterling_ascii',
+            '3_sterling_ascii',
+            '4_sterling_ascii',
+            '10_sterling_ascii',
+            '1_sterling_utf8',
+            '2_sterling_utf8',
+            '3_sterling_utf8',
+            '4_sterling_utf8',
+            '10_sterling_utf8',
+        ];
     }
 
     /**
@@ -102,33 +83,7 @@ class T_STERLING_Test extends PHPUnit_Framework_TestCase
      */
     public function test_matches_an_ascii_sterling_symbol($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_STERLING
-        ];
-
-        $expectedMatch = [
-            "matched" => true,
-            "hasValue" => true,
-            "value" => new Lexeme('unit', chr(156)),
-            "position" => new ScannerPosition(1,0,0)
-        ];
-        $expectedRemainder = substr($text, 1) . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForMatches($text, true, chr(156));
     }
 
     /**
@@ -137,67 +92,16 @@ class T_STERLING_Test extends PHPUnit_Framework_TestCase
      */
     public function test_matches_a_utf8_sterling_symbol($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_STERLING
-        ];
-
-        $expectedMatch = [
-            "matched" => true,
-            "hasValue" => true,
-            "value" => new Lexeme('unit', '£'),
-            "position" => new ScannerPosition(1,0,0)
-        ];
-        $expectedRemainder = substr($text, 2) . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForMatches($text, true, "£");
     }
 
     /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideNonMatches
      */
     public function test_does_not_match_anything_else($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_STERLING
-        ];
-
-        $expectedMatch = [
-            "matched" => false,
-            "position" => new ScannerPosition(1,0,0),
-            "expected" => $language['unit']
-        ];
-        $expectedRemainder = $text . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForNonMatches($text);
     }
 
     public function provideAsciiMatches()
@@ -235,26 +139,4 @@ class T_STERLING_Test extends PHPUnit_Framework_TestCase
         // all done
         return $retval;
     }
-
-    public function provideNonMatches()
-    {
-        // reuse our standard test set
-        $retval = getTerminalDataset();
-
-        // strip out the things that are supposed to match!
-        unset($retval['1_sterling_ascii']);
-        unset($retval['2_sterling_ascii']);
-        unset($retval['3_sterling_ascii']);
-        unset($retval['4_sterling_ascii']);
-        unset($retval['10_sterling_ascii']);
-        unset($retval['1_sterling_utf8']);
-        unset($retval['2_sterling_utf8']);
-        unset($retval['3_sterling_utf8']);
-        unset($retval['4_sterling_utf8']);
-        unset($retval['10_sterling_utf8']);
-
-        // all done
-        return $retval;
-    }
-
 }

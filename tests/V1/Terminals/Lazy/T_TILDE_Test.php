@@ -44,159 +44,49 @@
 namespace GanbaroDigitalTest\TextParser\V1\Terminals\Lazy;
 
 use GanbaroDigital\TextParser\V1\Terminals\Lazy\T_TILDE;
-use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
-use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
-use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
-use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
-use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
-use PHPUnit_Framework_TestCase;
+use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
  * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Lazy\T_TILDE
  */
-class T_TILDE_Test extends PHPUnit_Framework_TestCase
+class T_TILDE_Test extends BaseTestCase
 {
-    /**
-     * @covers ::__construct
-     */
-    public function test_can_instantiate()
+    protected function getUnitUnderTest()
     {
-        // ----------------------------------------------------------------
-        // setup your test
+        return new T_TILDE;
+    }
 
+    protected function getExpectedPseudoBNF()
+    {
+        return "~";
+    }
 
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_TILDE;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertTrue(is_object($unit));
+    protected function getDatasetKeysToMatch()
+    {
+        return [
+            '1_tilde',
+            '2_tilde',
+            '3_tilde',
+            '4_tilde',
+            '10_tilde',
+        ];
     }
 
     /**
-     * @covers ::__construct
-     */
-    public function test_is_TerminalRule()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_TILDE;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertInstanceOf(TerminalRule::class, $unit);
-    }
-
-    /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideMatches
      */
     public function test_matches_a_tilde_character($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_TILDE
-        ];
-
-        $expectedMatch = [
-            "matched" => true,
-            "hasValue" => true,
-            "value" => new Lexeme('unit', '~'),
-            "position" => new ScannerPosition(1,0,0)
-        ];
-        $expectedRemainder = substr($text, 1) . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForMatches($text, true, "~");
     }
 
     /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideNonMatches
      */
     public function test_does_not_match_anything_else($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_TILDE
-        ];
-
-        $expectedMatch = [
-            "matched" => false,
-            "position" => new ScannerPosition(1,0,0),
-            "expected" => $language['unit']
-        ];
-        $expectedRemainder = $text . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForNonMatches($text);
     }
-
-    public function provideMatches()
-    {
-        // reuse our standard test set
-        $dataset = getTerminalDataset();
-
-        // send back the items that are supposed to match!
-        $retval = [
-            '1_tilde' => $dataset['1_tilde'],
-            '2_tilde' => $dataset['2_tilde'],
-            '3_tilde' => $dataset['3_tilde'],
-            '4_tilde' => $dataset['4_tilde'],
-            '10_tilde' => $dataset['10_tilde'],
-        ];
-
-        // all done
-        return $retval;
-    }
-
-    public function provideNonMatches()
-    {
-        // reuse our standard test set
-        $retval = getTerminalDataset();
-
-        // strip out the things that are supposed to match!
-        unset($retval['1_tilde']);
-        unset($retval['2_tilde']);
-        unset($retval['3_tilde']);
-        unset($retval['4_tilde']);
-        unset($retval['10_tilde']);
-
-        // all done
-        return $retval;
-    }
-
 }

@@ -44,160 +44,49 @@
 namespace GanbaroDigitalTest\TextParser\V1\Terminals\Lazy;
 
 use GanbaroDigital\TextParser\V1\Terminals\Lazy\T_BACKTICK;
-use GanbaroDigital\TextParser\V1\Grammars\TerminalRule;
-use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
-use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
-use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
-use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
-
-use PHPUnit_Framework_TestCase;
+use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
  * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Lazy\T_BACKTICK
  */
-class T_BACKTICK_Test extends PHPUnit_Framework_TestCase
+class T_BACKTICK_Test extends BaseTestCase
 {
-    /**
-     * @covers ::__construct
-     */
-    public function test_can_instantiate()
+    protected function getUnitUnderTest()
     {
-        // ----------------------------------------------------------------
-        // setup your test
+        return new T_BACKTICK;
+    }
 
+    protected function getExpectedPseudoBNF()
+    {
+        return "`";
+    }
 
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_BACKTICK;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertTrue(is_object($unit));
+    protected function getDatasetKeysToMatch()
+    {
+        return [
+            '1_backtick',
+            '2_backtick',
+            '3_backtick',
+            '4_backtick',
+            '10_backtick',
+        ];
     }
 
     /**
-     * @covers ::__construct
-     */
-    public function test_is_TerminalRule()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $unit = new T_BACKTICK;
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertInstanceOf(TerminalRule::class, $unit);
-    }
-
-    /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideMatches
      */
-    public function test_matches_a_backtick($text)
+    public function test_matches_a_backtick_character($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_BACKTICK
-        ];
-
-        $expectedMatch = [
-            "matched" => true,
-            "hasValue" => true,
-            "value" => new Lexeme('unit', '`'),
-            "position" => new ScannerPosition(1,0,0)
-        ];
-        $expectedRemainder = substr($text, 1) . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForMatches($text, true, "`");
     }
 
     /**
-     * @coversNothing
+     * @covers ::matchAgainst
      * @dataProvider provideNonMatches
      */
     public function test_does_not_match_anything_else($text)
     {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        $language = [
-            'unit' => new T_BACKTICK
-        ];
-
-        $expectedMatch = [
-            "matched" => false,
-            "position" => new ScannerPosition(1,0,0),
-            "expected" => $language['unit']
-        ];
-        $expectedRemainder = $text . '100';
-        $scanner = StreamScanner::newFrom($text . '100', 'unit test');
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $actualMatch = $language['unit']->matchAgainst($language, 'unit', $scanner, new NoopAdjuster);
-        $actualRemainder = $scanner->readRemainingBytes();
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $this->assertEquals($expectedMatch, $actualMatch);
-        $this->assertEquals($expectedRemainder, $actualRemainder);
+        $this->checkForNonMatches($text);
     }
-
-    public function provideMatches()
-    {
-        // reuse our standard test set
-        $dataset = getTerminalDataset();
-
-        // send back the items that are supposed to match!
-        $retval = [
-            '1_backtick' => $dataset['1_backtick'],
-            '2_backtick' => $dataset['2_backtick'],
-            '3_backtick' => $dataset['3_backtick'],
-            '4_backtick' => $dataset['4_backtick'],
-            '10_backtick' => $dataset['10_backtick'],
-        ];
-
-        // all done
-        return $retval;
-    }
-
-    public function provideNonMatches()
-    {
-        // reuse our standard test set
-        $retval = getTerminalDataset();
-
-        // strip out the things that are supposed to match!
-        unset($retval['1_backtick']);
-        unset($retval['2_backtick']);
-        unset($retval['3_backtick']);
-        unset($retval['4_backtick']);
-        unset($retval['10_backtick']);
-
-        // all done
-        return $retval;
-    }
-
 }
