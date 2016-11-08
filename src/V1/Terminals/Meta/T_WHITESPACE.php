@@ -71,7 +71,7 @@ class T_WHITESPACE implements TerminalRule
      */
     public function getPseudoBNF()
     {
-        return "regex /\s\v+/";
+        return "regex /\\s\\v+/";
     }
 
     /**

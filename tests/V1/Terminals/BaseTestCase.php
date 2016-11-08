@@ -218,42 +218,6 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
     /**
      * @covers ::matchAgainst
      */
-    public function test_matchAgainst_calls_adjuster_adjustBeforeStartPosition()
-    {
-        // ----------------------------------------------------------------
-        // setup your test
-
-        // we only need one value to test against
-        $matches = $this->provideMatches();
-        $firstMatch = current($matches);
-        $text = current($firstMatch);
-
-        $language = [
-            "unit" => $this->getUnitUnderTest()
-        ];
-
-        $scanner = StreamScanner::newFromString($text . '100', 'unit test');
-        $adjuster = new CallTrackingAdjuster();
-        $expectedAdjustments = [
-            "adjustBeforeStartPosition",
-            "adjustAfterMatch"
-        ];
-
-        // ----------------------------------------------------------------
-        // perform the change
-
-        $language['unit']->matchAgainst($language, 'unit', $scanner, $adjuster);
-
-        // ----------------------------------------------------------------
-        // test the results
-
-        $actualAdjustments = $adjuster->getCallsList();
-        $this->assertEquals($expectedAdjustments, $actualAdjustments);
-    }
-
-    /**
-     * @covers ::matchAgainst
-     */
     public function test_matchAgainst_calls_adjuster_adjustAfterMatch()
     {
         // ----------------------------------------------------------------
@@ -271,7 +235,6 @@ abstract class BaseTestCase extends PHPUnit_Framework_TestCase
         $scanner = StreamScanner::newFromString($text . '100', 'unit test');
         $adjuster = new CallTrackingAdjuster();
         $expectedAdjustments = [
-            "adjustBeforeStartPosition",
             "adjustAfterMatch"
         ];
 

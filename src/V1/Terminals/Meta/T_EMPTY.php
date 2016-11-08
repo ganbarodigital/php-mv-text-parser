@@ -90,9 +90,7 @@ class T_EMPTY implements TerminalRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // adjust the stream before we match
-        $adjuster->adjustBeforeStartPosition($scanner);
-
+        // remember where we matched ... we ALWAYS match
         $matchPos = $scanner->getPosition();
 
         // adjust the stream again, now that we've matched

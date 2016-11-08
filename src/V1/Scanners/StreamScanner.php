@@ -157,6 +157,9 @@ class StreamScanner implements Scanner
     {
         // get the bytes
         $retval = fread($this->stream, $size);
+        if ($retval === false) {
+            return '';
+        }
 
         // workout where we now are
         $this->updatePositionFrom($retval);
@@ -197,6 +200,9 @@ class StreamScanner implements Scanner
     {
         // get the bytes
         $retval = fread($this->stream, $size);
+        if ($retval === false) {
+            return '';
+        }
 
         // go back to where we were in the stream
         fseek($this->stream, 0 - strlen($retval), SEEK_CUR);
@@ -227,9 +233,6 @@ class StreamScanner implements Scanner
      */
     private function updatePositionFrom($bytesRead)
     {
-        // shorthand
-        $bytesCount = strlen($bytesRead);
-
         // have we moved across any lines?
         $matches = [];
         if (preg_match_all("/\n/", $bytesRead, $matches, PREG_OFFSET_CAPTURE)) {
@@ -277,6 +280,17 @@ class StreamScanner implements Scanner
      */
     public function movePastWhitespaceOnCurrentLine()
     {
+        // special case - do we have whitespace at the front of the
+        // stream atm?
+        $c = fgetc($this->stream);
+        if ($c === false) {
+            return false;
+        }
+        fseek($this->stream, -1, SEEK_CUR);
+        if ($c !== " " && $c !== "\t") {
+            return false;
+        }
+
         // we need to keep track of whether the stream has moved or not
         $startPos = ftell($this->stream);
 
@@ -317,36 +331,56 @@ class StreamScanner implements Scanner
      */
     public function movePastWhitespace()
     {
+        // special case - do we have whitespace at the front of the
+        // stream atm?
+        $c = fgetc($this->stream);
+        if ($c === false) {
+            return false;
+        }
+        fseek($this->stream, -1, SEEK_CUR);
+        if ($c !== " " && $c !== "\t" && $c !== "\n" && $c !== "\r") {
+            return false;
+        }
+
+        // if get here, then there is at least 1 whitespace character to
+        // handle ... and there may be more!
+
         // we need to keep track of whether the stream has moved or not
         $startPos = ftell($this->stream);
 
         // read from the stream until we hit EOF
-        while (($c = fgetc($this->stream)) !== false) {
-            // do we have whitespace?
-            if ($c === ' ' || $c === "\r") {
-                $this->lineOffset++;
-            }
-            // is this a tab character?
-            else if ($c === "\t") {
-                $this->lineOffset += ($this->tabSize - ($this->lineOffset % $this->tabSize));
-            }
-            // have we moved onto the next line?
-            else if ($c === "\n") {
-                $this->lineNo++;
-                $this->lineOffset = 0;
-            }
-            else {
-                // no, so we're done here
-                break;
+        //
+        // we read in blocks to reduce the CPU cost
+        while (($chars = fread($this->stream, 8)) !== false && $chars !== '') {
+            $iMax = strlen($chars);
+            for ($i = 0; $i < $iMax; $i++) {
+                $c = $chars{$i};
+
+                // do we have whitespace?
+                if ($c === ' ' || $c === "\r") {
+                    $this->lineOffset++;
+                }
+                // is this a tab character?
+                else if ($c === "\t") {
+                    $this->lineOffset += ($this->tabSize - ($this->lineOffset % $this->tabSize));
+                }
+                // have we moved onto the next line?
+                else if ($c === "\n") {
+                    $this->lineNo++;
+                    $this->lineOffset = 0;
+                }
+                else {
+                    // no, so we're done here
+                    break 2;
+                }
             }
         }
 
-        // at this point, we may have read 1 character too many
-        if ($c !== false) {
-            fseek($this->stream, -1, SEEK_CUR);
-        }
+        // at this point, we may have read too many characters
+        fseek($this->stream, 0 - ($iMax - $i), SEEK_CUR);
 
         // all done
+        ftell($this->stream);
         return ($startPos <> ftell($this->stream));
     }
 

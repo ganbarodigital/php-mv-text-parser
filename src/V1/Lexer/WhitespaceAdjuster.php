@@ -64,6 +64,8 @@ class WhitespaceAdjuster implements LexAdjuster
      */
     public function adjustBeforeStartPosition(Scanner $scanner)
     {
+        // anything clever here turns out to be slower than letting the
+        // scanner worry about whether this is a waste of time or not!
         $scanner->movePastWhitespace();
     }
 
@@ -83,6 +85,8 @@ class WhitespaceAdjuster implements LexAdjuster
      */
     public function adjustAfterMatch(Scanner $scanner, GrammarRule $grammar, $hasValue, $value)
     {
-        // do nothing
+        // anything clever here turns out to be slower than letting the
+        // scanner worry about whether this is a waste of time or not!
+        $scanner->movePastWhitespace();
     }
 }

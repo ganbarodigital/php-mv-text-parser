@@ -88,7 +88,7 @@ class Discard implements GrammarRule
      */
     public function getPseudoBNF()
     {
-        return "-{$this->buildingBlock->getPseudoBNF()}-";
+        return $this->buildingBlock->getPseudoBNF();
     }
 
     /**
@@ -107,28 +107,16 @@ class Discard implements GrammarRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // make any necessary changes to the input stream
-        $adjuster->adjustBeforeStartPosition($scanner);
-
-        // keep track of where we started from
-        $startPos = $scanner->getPosition();
-
-        // does our optional grammar match?
+        // do we have the thing that we want to throw away?
         $matches = $this->buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
         if ($matches['matched']) {
-            // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner, $this, false, null);
-
+            // we do, so throw it away
             $matches['hasValue'] = false;
-            $matches['value'] = new Lexeme($lexemeName, null);
+            $matches['value'] = null;
             return $matches;
         }
 
         // we did not match
-        return [
-            'matched' => false,
-            'position' => $startPos,
-            'expected' => $this
-        ];
+        return $matches;
     }
 }

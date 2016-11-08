@@ -34,79 +34,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @category  Libraries
- * @package   TextParser\V1\Grammars
+ * @package   TextParser\V1\Lexer
  * @author    Stuart Herbert <stuherbert@ganbarodigital.com>
  * @copyright 2016-present Ganbaro Digital Ltd www.ganbarodigital.com
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigital\TextParser\V1\Grammars;
+namespace GanbaroDigital\TextParser\V1\Lexer;
 
-use GanbaroDigital\TextParser\V1\Lexer\LexAdjuster;
-use GanbaroDigital\TextParser\V1\Lexer\Lexeme;
-use GanbaroDigital\TextParser\V1\Scanners\Scanner;
-
-/**
- * a reference to another grammar
- */
-class Reference implements GrammarRule
+interface NeedsEvaluating
 {
-    /**
-     * the grammar that we are an alias for
-     * @var string
-     */
-    private $buildingBlock;
-
-    /**
-     * create a new instance
-     *
-     * @param string $name
-     *        the grammars that we are a reference for
-     */
-    public function __construct($name)
-    {
-        $this->buildingBlock = $name;
-    }
-
-    /**
-     * return a (possibly empty) list of the grammars that this grammer
-     * is built upon
-     *
-     * @return string[]
-     */
-    public function getBuildingBlocks()
-    {
-        return [$this->buildingBlock];
-    }
-
-    /**
-     * describe this grammar using BNF-like syntax
-     *
-     * @return string
-     */
-    public function getPseudoBNF()
-    {
-        return $this->buildingBlock;
-    }
-
-    /**
-     * does this grammar match against the provided text?
-     *
-     * @param  GrammarRule[] $grammars
-     *         our dictionary of grammars
-     * @param  string $lexemeName
-     *         the name to assign to any lexeme we create
-     * @param  Scanner $scanner
-     *         the text to match
-     * @param  LexAdjuster $adjuster
-     *         modify the lexer behaviour to suit
-     * @return array
-     *         details about what happened
-     */
-    public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
-    {
-        $grammar = $grammars[$this->buildingBlock];
-        return $grammar->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
-    }
+    public function evaluate();
 }

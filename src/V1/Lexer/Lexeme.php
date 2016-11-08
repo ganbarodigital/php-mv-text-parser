@@ -43,13 +43,11 @@
 
 namespace GanbaroDigital\TextParser\V1\Lexer;
 
-use ArrayAccess;
-
-class Lexeme implements ArrayAccess
+class Lexeme implements NeedsEvaluating
 {
-    public $name;
-    public $value;
-    public $evaluator;
+    private $name;
+    private $value;
+    private $evaluator;
 
     public function __construct($name, $value, callable $evaluator = null)
     {
@@ -65,66 +63,16 @@ class Lexeme implements ArrayAccess
 
         // step 1 - do we have a value that needs evaluating?
         $value = $this->value;
-        if ($value instanceof Lexeme || $value instanceof Lexemes) {
+        if ($value instanceof NeedsEvaluating) {
             $value = $value->evaluate();
         }
 
         // step 2 - do we need to evaluate further?
-        if (is_callable($evaluator)) {
-            return $evaluator($value);
+        if ($evaluator !== null) {
+            $value = $evaluator($value);
         }
 
-        // if we get here, then there's nothing left to do
+        // all done
         return $value;
-    }
-
-    public function offsetExists($offset)
-    {
-        if (!$this->canUseValueAsArray()) {
-            return false;
-        }
-
-        return isset($this->value[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        if (!$this->canUseValueAsArray()) {
-            return null;
-        }
-
-        return $this->value[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        if (!$this->canUseValueAsArray()) {
-            $this->value = $value;
-            return false;
-        }
-
-        $this->value[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        if (!$this->canUseValueAsArray()) {
-            $this->value = null;
-            return false;
-        }
-
-        unset($this->value[$offset]);
-    }
-
-    private function canUseValueAsArray()
-    {
-        if (is_array($this->value)) {
-            return true;
-        }
-        if ($this->value instanceof ArrayAccess) {
-            return true;
-        }
-
-        return false;
     }
 }

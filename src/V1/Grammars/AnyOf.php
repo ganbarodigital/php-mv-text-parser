@@ -112,9 +112,6 @@ class AnyOf implements GrammarRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // make any necessary changes before
-        $adjuster->adjustBeforeStartPosition($scanner);
-
         // remember where we are
         $startPos = $scanner->getPosition();
 
@@ -129,7 +126,6 @@ class AnyOf implements GrammarRule
         foreach ($this->buildingBlocks as $buildingBlock) {
             $matches = $buildingBlock->matchAgainst($grammars, $lexemeName, $scanner, $adjuster);
             if ($matches['matched']) {
-                $adjuster->adjustAfterMatch($scanner, $this, $matches['hasValue'], $matches['value']);
                 return $matches;
             }
 

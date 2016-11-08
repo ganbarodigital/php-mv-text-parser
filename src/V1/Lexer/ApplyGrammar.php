@@ -74,6 +74,12 @@ class ApplyGrammar
             $adjuster = new NoopAdjuster;
         }
 
+        // make the first adjustment
+        //
+        // after this, we only need to make adjustments after a terminal rule
+        // has matched :)
+        $adjuster->adjustBeforeStartPosition($scanner);
+
         // we're just a bit of syntactic sugar :)
         return $grammars[$grammarName]->matchAgainst($grammars, $grammarName, $scanner, $adjuster);
     }

@@ -43,12 +43,7 @@
 
 namespace GanbaroDigital\TextParser\V1\Lexer;
 
-use ArrayAccess;
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
-
-class Lexemes implements ArrayAccess, Countable, IteratorAggregate
+class Lexemes implements NeedsEvaluating
 {
     public $name;
     public $values;
@@ -71,51 +66,18 @@ class Lexemes implements ArrayAccess, Countable, IteratorAggregate
 
         // step 1 - do we have a value that needs evaluating?
         foreach ($this->values as $key => $value) {
-            if ($value instanceof Lexeme || $value instanceof Lexemes) {
+            if ($value instanceof NeedsEvaluating) {
                 $value = $value->evaluate();
             }
             $retval[$key] = $value;
         }
 
         // step 2 - do we need to evaluate further?
-        if (is_callable($evaluator)) {
+        if ($evaluator !== null) {
             return $evaluator($retval);
         }
 
         // if we get here, then there's nothing left to do
         return $retval;
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->values[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        if (!isset($this->values[$offset])) {
-            return null;
-        }
-        return $this->values[$offset];
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        $this->values[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->values[$offset]);
-    }
-
-    public function count()
-    {
-        return count($this->values);
-    }
-
-    public function getIterator()
-    {
-        return new ArrayIterator($this->values);
     }
 }

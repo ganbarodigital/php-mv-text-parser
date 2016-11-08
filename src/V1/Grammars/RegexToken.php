@@ -159,9 +159,6 @@ class RegexToken implements TerminalRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // make any necessary changes to the input stream
-        $adjuster->adjustBeforeStartPosition($scanner);
-
         // remember where we started from
         $startPos = $scanner->getPosition();
 
@@ -204,5 +201,4 @@ class RegexToken implements TerminalRule
             'expected' => $this
         ];
     }
-
 }

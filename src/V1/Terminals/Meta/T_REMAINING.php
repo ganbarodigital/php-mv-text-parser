@@ -105,9 +105,6 @@ class T_REMAINING implements TerminalRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // adjust the input stream before we get started
-        $adjuster->adjustBeforeStartPosition($scanner);
-
         // remember where we started from
         $startPos = $scanner->getPosition();
 
@@ -120,9 +117,14 @@ class T_REMAINING implements TerminalRule
             ];
         }
 
+        // consume everything that is left
         $remainingBytes = $scanner->readRemainingBytes();
+
+        // other than consistent behaviour, is there any point to this?
+        // at this point, there's nothing left in the input stream
         $adjuster->adjustAfterMatch($scanner, $this, true, $remainingBytes);
 
+        // all done
         return [
             'matched' => true,
             'hasValue' => true,

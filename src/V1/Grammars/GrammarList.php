@@ -109,9 +109,6 @@ class GrammarList implements GrammarRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // make any nececessary changes to the input stream
-        $adjuster->adjustBeforeStartPosition($scanner);
-
         // remember where we started from
         $startPos = $scanner->getPosition();
 
@@ -125,6 +122,9 @@ class GrammarList implements GrammarRule
             if (!$matches['matched']) {
                 // if one fails, all have failed
                 $scanner->setPosition($startPos);
+
+                // send back the item that failed, rather than us
+                // this makes for better error reporting
                 return $matches;
             }
 
@@ -134,22 +134,12 @@ class GrammarList implements GrammarRule
             }
         }
 
-        // make any necessary changes to the input stream
-        $adjuster->adjustAfterMatch($scanner, $this, count($values) > 0, $values);
-
         // if we get here, then everything in our list matched :)
-        if (empty($values)) {
-            return [
-                'matched' => true,
-                'hasValue' => false,
-                'value' => null,
-            ];
-        }
-
         return [
             'matched' => true,
             'hasValue' => true,
             'value' => new Lexemes($lexemeName, $values, $this->evaluator),
+            'position' => $startPos,
         ];
     }
 }

@@ -116,64 +116,55 @@ class AtLeastOnce implements GrammarRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // make any necessary changes before
-        $adjuster->adjustBeforeStartPosition($scanner);
-
-        // keep track of where we started from
+        // keep track of where we found something
         $startPos = $scanner->getPosition();
 
-        // keep track of what has matched
+        // keep track of what values we have accumulated
         $values = [];
-        $hasMatched = false;
 
-        $done = false;
-        while(!$done) {
-            $matches = $this->buildingBlock->matchAgainst($grammars, 'item', $scanner, $adjuster);
-            if (!$matches['matched']) {
-                break;
-            }
-            $hasMatched = true;
-            if ($matches['hasValue']) {
-                $values[] = $matches['value'];
-            }
+        // there must be at least 1 match, or else the deal is off!
+        $matches = $this->buildingBlock->matchAgainst($grammars, 'item', $scanner, $adjuster);
+        if (!$matches['matched']) {
+            return [
+                'matched' => false,
+                'position' => $startPos,
+                'expected' => $this
+            ];
+        }
+        if ($matches['hasValue']) {
+            $values[] = $matches['value'];
+        }
 
+        while(true) {
+            // do we have a separator?
             $matches = $this->separator->matchAgainst($grammars, 'separator', $scanner, $adjuster);
             if (!$matches['matched']) {
+                // no, but that's okay ...
+                // it just means that we've reached the end of this sequence
                 break;
             }
+            if ($matches['hasValue']) {
+                $values[] = $matches['value'];
+            }
 
+            // do we have the next match?
+            $matches = $this->buildingBlock->matchAgainst($grammars, 'item', $scanner, $adjuster);
+            if (!$matches['matched']) {
+                // we *MUST* have a match immediately after matching
+                // our separator
+                return $matches;
+            }
             if ($matches['hasValue']) {
                 $values[] = $matches['value'];
             }
         }
 
-        if ($hasMatched) {
-            // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner, $this, count($values) > 0, $values);
-        }
-
-        // did we match anything?
-        if (count($values) > 0) {
-            // yes we did
-            return [
-                'matched' => true,
-                'hasValue' => true,
-                'value' => new Lexemes($lexemeName, $values, $this->evaluator),
-            ];
-        }
-        if ($hasMatched) {
-            return [
-                'matched' => true,
-                'hasValue' => false,
-                'value' => new Lexemes($lexemeName, [], $this->evaluator),
-            ];
-        }
-
-        // if we get here, then nothing matched
+        $evaluator = $this->evaluator;
         return [
-            'matched' => false,
+            'matched' => true,
+            'hasValue' => true,
+            'value' => new Lexemes($lexemeName, $values, $this->evaluator),
             'position' => $startPos,
-            'expected' => $this
         ];
     }
 }

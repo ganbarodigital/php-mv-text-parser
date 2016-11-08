@@ -140,17 +140,17 @@ class PrefixToken implements TerminalRule
      */
     public function matchAgainst($grammars, $lexemeName, Scanner $scanner, LexAdjuster $adjuster)
     {
-        // make any necessary changes to the input stream
-        $adjuster->adjustBeforeStartPosition($scanner);
-
         // keep track of where we are
         $startPos = $scanner->getPosition();
 
         // the text we want to check
         $text = $scanner->readBytesAhead($this->prefixLen);
 
-        // special case - text is too short
-        if (strlen($text) < $this->prefixLen) {
+        // did we get a match?
+        //
+        // this is faster than using PHP's !== operator on two strings
+        if (strcmp($text, $this->prefix) != 0) {
+            // better luck next time
             return [
                 'matched' => false,
                 'position' => $startPos,
@@ -158,27 +158,18 @@ class PrefixToken implements TerminalRule
             ];
         }
 
-        if ($text === $this->prefix) {
-            // a match!
-            $scanner->moveBytes($this->prefixLen);
+        // a match!
+        $scanner->moveBytes($this->prefixLen);
 
-            // make any necessary changes to the input stream
-            $adjuster->adjustAfterMatch($scanner, $this, true, $this->prefix);
+        // make any necessary changes to the input stream
+        $adjuster->adjustAfterMatch($scanner, $this, true, $this->prefix);
 
-            return [
-                'matched' => true,
-                'hasValue' => true,
-                'value' => new Lexeme($lexemeName, $this->prefix, $this->evaluator),
-                'position' => $startPos
-            ];
-        }
-
-        // if we get here, then no joy
+        // tell the caller what we found :)
         return [
-            'matched' => false,
-            'position' => $startPos,
-            'expected' => $this
+            'matched' => true,
+            'hasValue' => true,
+            'value' => new Lexeme($lexemeName, $this->prefix, $this->evaluator),
+            'position' => $startPos
         ];
     }
-
 }
