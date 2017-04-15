@@ -60,6 +60,10 @@ function getTerminalDataSet()
         "single_quoted_string" => [ "'@100'" ],
         "integer_8bit_max" => [ "255" ],
         "integer_8bit_max_plus_one" => [ "256" ],
+        "fractional_percentage_min" => [ "0.0" ],
+        "fractional_percentage_max" => [ "1.0" ],
+        "fractional_percentage_small" => [ "0.000001" ],
+        "fractional_percentage_large" => [ "0.999999" ],
     ];
 
     // add entries for all individual characters, and their repetitions

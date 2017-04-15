@@ -27,6 +27,7 @@
   - added `T_EMPTY` meta terminal token
   - added `T_EQUALS` lazy-match terminal token
   - added `T_FORWARD_SLASH` lazy-match terminal token
+  - added `T_FRACTIONAL_PERCENTAGE` meta terminal token
   - added `T_GREATER_THAN` lazy-match terminal token
   - added `T_GREATER_THAN_OR_EQUAL_TO` lazy-match terminal token
   - added `T_GREATER_THAN_OR_LESS_THAN` lazy-match terminal token

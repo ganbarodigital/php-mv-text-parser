@@ -44,40 +44,30 @@
 namespace GanbaroDigitalTest\TextParser\V1\Terminals\Meta;
 
 use GanbaroDigital\TextParser\V1\Evaluators\CastToNumber;
-use GanbaroDigital\TextParser\V1\Terminals\Meta\T_NUMBER;
+use GanbaroDigital\TextParser\V1\Terminals\Meta\T_FRACTIONAL_PERCENTAGE;
 use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_NUMBER
+ * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_FRACTIONAL_PERCENTAGE
  */
-class T_NUMBER_Test extends BaseTestCase
+class T_FRACTIONAL_PERCENTAGE_Test extends BaseTestCase
 {
     protected function getUnitUnderTest()
     {
-        return new T_NUMBER;
+        return new T_FRACTIONAL_PERCENTAGE;
     }
 
     protected function getExpectedPseudoBNF()
     {
-        return "regex /^[-+]{0,1}[0-9][\\.0-9]*/";
+        return 'regex /^(1\\.0|0\\.[0-9]+|1|0)(?![0-9%])/';
     }
 
     protected function getDatasetKeysToMatch()
     {
         return [
-            'float_zero',
-            'float_positive',
-            'float_positive_signed',
-            'float_negative',
             'integer_zero',
             'integer_one',
-            'integer_positive',
-            'integer_positive_max',
-            'integer_positive_signed',
-            'integer_negative',
-            'integer_negative_min',
-            'integer_8bit_max',
-            'integer_8bit_max_plus_one',
+            'float_zero',
             'fractional_percentage_min',
             'fractional_percentage_max',
             'fractional_percentage_small',
@@ -89,7 +79,7 @@ class T_NUMBER_Test extends BaseTestCase
      * @covers ::matchAgainst
      * @dataProvider provideMatches
      */
-    public function test_matches_an_integer($text)
+    public function test_matches_an_8bit_integer($text)
     {
         $this->checkForMatches($text, true, $text, " not part of a number", new CastToNumber);
     }
