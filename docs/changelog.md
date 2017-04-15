@@ -10,6 +10,7 @@
   - added `NoopAdjuster` as the default adjuster used in our lexer
   - added `WhitespaceAdjuster` to silently consume whitespace between grammar rules
 * Added some pre-defined tokens to save you having to define them in every project
+  - added `T_8BIT_VALUE` lazy-match terminal token
   - added `T_AMPERSAND` lazy-match terminal token
   - added `T_ASTERISK` lazy-match terminal token
   - added `T_AT` lazy-match terminal token

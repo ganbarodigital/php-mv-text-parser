@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2015-present Ganbaro Digital Ltd
+ * Copyright (c) 2016-present Ganbaro Digital Ltd
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,66 +36,26 @@
  * @category  Libraries
  * @package   TextParser\V1\Terminals
  * @author    Stuart Herbert <stuherbert@ganbarodigital.com>
- * @copyright 2015-present Ganbaro Digital Ltd www.ganbarodigital.com
+ * @copyright 2016-present Ganbaro Digital Ltd www.ganbarodigital.com
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigitalTest\TextParser\V1\Terminals\Meta;
+namespace GanbaroDigital\TextParser\V1\Terminals\Meta;
 
 use GanbaroDigital\TextParser\V1\Evaluators\CastToNumber;
-use GanbaroDigital\TextParser\V1\Terminals\Meta\T_NUMBER;
-use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
+use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_NUMBER
+ * matches an 8-bit value (0-255)
  */
-class T_NUMBER_Test extends BaseTestCase
+class T_8BIT_VALUE extends RegexToken
 {
-    protected function getUnitUnderTest()
+    public function __construct(callable $evaluator = null)
     {
-        return new T_NUMBER;
-    }
-
-    protected function getExpectedPseudoBNF()
-    {
-        return "regex /^[-+]{0,1}[0-9][\\.0-9]*/";
-    }
-
-    protected function getDatasetKeysToMatch()
-    {
-        return [
-            'float_zero',
-            'float_positive',
-            'float_positive_signed',
-            'float_negative',
-            'integer_zero',
-            'integer_one',
-            'integer_positive',
-            'integer_positive_max',
-            'integer_positive_signed',
-            'integer_negative',
-            'integer_negative_min',
-            'integer_8bit_max',
-            'integer_8bit_max_plus_one',
-        ];
-    }
-
-    /**
-     * @covers ::matchAgainst
-     * @dataProvider provideMatches
-     */
-    public function test_matches_an_integer($text)
-    {
-        $this->checkForMatches($text, true, $text, " not part of a number", new CastToNumber);
-    }
-
-    /**
-     * @covers ::matchAgainst
-     * @dataProvider provideNonMatches
-     */
-    public function test_does_not_match_anything_else($text)
-    {
-        $this->checkForNonMatches($text, " not part of a number");
+        if ($evaluator === null) {
+            $evaluator = new CastToNumber;
+        }
+        parent::__construct('/^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?![0-9\\.])/', 4, $evaluator);
     }
 }

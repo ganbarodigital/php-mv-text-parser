@@ -46,6 +46,7 @@ function getTerminalDataSet()
     $retval = [
         "empty" => [ "" ],
         "integer_zero" => [ "0" ],
+        "integer_one" => [ "1" ],
         "integer_positive" => [ "100" ],
         "integer_positive_max" => [ (string)PHP_INT_MAX ],
         "integer_positive_signed" => [ "+100" ],
@@ -57,6 +58,8 @@ function getTerminalDataSet()
         "float_negative" => [ "-100.10" ],
         "double_quoted_string" => [ '"@100"' ],
         "single_quoted_string" => [ "'@100'" ],
+        "integer_8bit_max" => [ "255" ],
+        "integer_8bit_max_plus_one" => [ "256" ],
     ];
 
     // add entries for all individual characters, and their repetitions
