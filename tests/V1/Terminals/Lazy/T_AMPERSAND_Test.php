@@ -78,7 +78,7 @@ class T_AMPERSAND_Test extends BaseTestCase
      */
     public function test_matches_an_ampersand_character($text)
     {
-        $this->checkForMatches($text, true, "&");
+        $this->checkForMatches($text, true, "&", "&");
     }
 
     /**

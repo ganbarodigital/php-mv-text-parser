@@ -59,7 +59,7 @@ class T_8BIT_VALUE_Test extends BaseTestCase
 
     protected function getExpectedPseudoBNF()
     {
-        return 'regex /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?![0-9\\.])/';
+        return 'regex /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?![0-9\\.%])/';
     }
 
     protected function getDatasetKeysToMatch()
@@ -78,7 +78,7 @@ class T_8BIT_VALUE_Test extends BaseTestCase
      */
     public function test_matches_an_8bit_integer($text)
     {
-        $this->checkForMatches($text, true, $text, " not part of a number", new CastToNumber);
+        $this->checkForMatches($text, true, $text, $text, " not part of a number", new CastToNumber);
     }
 
     /**

@@ -41,34 +41,35 @@
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigitalTest\TextParser\V1\Terminals\Lazy;
+namespace GanbaroDigitalTest\TextParser\V1\Terminals\Meta;
 
-use GanbaroDigital\TextParser\V1\Terminals\Lazy\T_COMMA;
+use GanbaroDigital\TextParser\V1\Evaluators\CastToNumber;
+use GanbaroDigital\TextParser\V1\Terminals\Meta\T_INT_PERCENTAGE;
 use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Lazy\T_COMMA
+ * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_INT_PERCENTAGE
  */
-class T_COMMA_Test extends BaseTestCase
+class T_INT_PERCENTAGE_Test extends BaseTestCase
 {
     protected function getUnitUnderTest()
     {
-        return new T_COMMA;
+        return new T_INT_PERCENTAGE;
     }
 
     protected function getExpectedPseudoBNF()
     {
-        return ",";
+        return 'regex /^([1-9][0-9]*|[0-9])%/';
     }
 
     protected function getDatasetKeysToMatch()
     {
         return [
-            '1_comma',
-            '2_comma',
-            '3_comma',
-            '4_comma',
-            '10_comma',
+            "integer_percentage_min",
+            "integer_percentage_ten",
+            "integer_percentage_twenty_nine",
+            "integer_percentage_max",
+            "integer_percentage_max_plus_one",
         ];
     }
 
@@ -76,9 +77,9 @@ class T_COMMA_Test extends BaseTestCase
      * @covers ::matchAgainst
      * @dataProvider provideMatches
      */
-    public function test_matches_a_comma_character($text)
+    public function test_matches_an_integer_percentage($text)
     {
-        $this->checkForMatches($text, true, ",", ",");
+        $this->checkForMatches($text, true, $text, (int)(substr($text, 0, -1)), " not part of a number", new CastToNumber);
     }
 
     /**
@@ -87,6 +88,6 @@ class T_COMMA_Test extends BaseTestCase
      */
     public function test_does_not_match_anything_else($text)
     {
-        $this->checkForNonMatches($text);
+        $this->checkForNonMatches($text, " not part of a number");
     }
 }

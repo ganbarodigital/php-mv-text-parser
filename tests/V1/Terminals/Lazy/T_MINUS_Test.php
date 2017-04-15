@@ -81,7 +81,7 @@ class T_MINUS_Test extends BaseTestCase
      */
     public function test_matches_a_minus_character($text)
     {
-        $this->checkForMatches($text, true, "-");
+        $this->checkForMatches($text, true, "-", "-");
     }
 
     /**

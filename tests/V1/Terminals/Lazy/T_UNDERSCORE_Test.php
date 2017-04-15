@@ -78,7 +78,7 @@ class T_UNDERSCORE_Test extends BaseTestCase
      */
     public function test_matches_an_underscore_character($text)
     {
-        $this->checkForMatches($text, true, "_");
+        $this->checkForMatches($text, true, "_", "_");
     }
 
     /**

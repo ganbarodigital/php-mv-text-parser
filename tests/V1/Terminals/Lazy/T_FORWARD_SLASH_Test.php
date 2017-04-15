@@ -78,7 +78,7 @@ class T_FORWARD_SLASH_Test extends BaseTestCase
      */
     public function test_matches_a_forward_slash_character($text)
     {
-        $this->checkForMatches($text, true, "/");
+        $this->checkForMatches($text, true, "/", "/");
     }
 
     /**

@@ -78,7 +78,7 @@ class T_CLOSE_BRACE_Test extends BaseTestCase
      */
     public function test_matches_a_close_brace_character($text)
     {
-        $this->checkForMatches($text, true, "}");
+        $this->checkForMatches($text, true, "}", "}");
     }
 
     /**

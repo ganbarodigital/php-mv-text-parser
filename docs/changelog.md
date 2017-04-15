@@ -34,6 +34,7 @@
   - added `T_HASH` lazy-match terminal token
   - added `T_INT_0` strict-match terminal token
   - added `T_INT_1` strict-match terminal token
+  - added `T_INT_PERCENTAGE` meta terminal token
   - added `T_LESS_THAN` lazy-match terminal token
   - added `T_LESS_THAN_OR_EQUAL_TO` lazy-match terminal token
   - added `T_MINUS` lazy-match terminal token

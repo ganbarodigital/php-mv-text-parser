@@ -64,6 +64,11 @@ function getTerminalDataSet()
         "fractional_percentage_max" => [ "1.0" ],
         "fractional_percentage_small" => [ "0.000001" ],
         "fractional_percentage_large" => [ "0.999999" ],
+        "integer_percentage_min" => [ "0%" ],
+        "integer_percentage_ten" => [ "10%" ],
+        "integer_percentage_twenty_nine" => [ "29%" ],
+        "integer_percentage_max" => [ "100%" ],
+        "integer_percentage_max_plus_one" => [ "101%" ],
     ];
 
     // add entries for all individual characters, and their repetitions

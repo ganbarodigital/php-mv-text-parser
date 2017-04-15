@@ -78,7 +78,7 @@ class T_TILDE_Test extends BaseTestCase
      */
     public function test_matches_a_tilde_character($text)
     {
-        $this->checkForMatches($text, true, "~");
+        $this->checkForMatches($text, true, "~", "~");
     }
 
     /**

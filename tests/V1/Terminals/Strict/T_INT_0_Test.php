@@ -59,7 +59,7 @@ class T_INT_0_Test extends BaseTestCase
 
     protected function getExpectedPseudoBNF()
     {
-        return 'regex /^0(?![0-9\\.])/';
+        return 'regex /^0(?![0-9\\.%])/';
     }
 
     protected function getDatasetKeysToMatch()
@@ -75,7 +75,7 @@ class T_INT_0_Test extends BaseTestCase
      */
     public function test_matches_the_integer_1($text)
     {
-        $this->checkForMatches($text, true, $text, " not part of a number", new CastToNumber);
+        $this->checkForMatches($text, true, $text, 0, " not part of a number", new CastToNumber);
     }
 
     /**

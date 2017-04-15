@@ -78,7 +78,7 @@ class T_LESS_THAN_OR_EQUAL_TO_Test extends BaseTestCase
      */
     public function test_matches_a_less_than_or_equal_to_sign($text)
     {
-        $this->checkForMatches($text, true, "<=");
+        $this->checkForMatches($text, true, "<=", "<=");
     }
 
     /**

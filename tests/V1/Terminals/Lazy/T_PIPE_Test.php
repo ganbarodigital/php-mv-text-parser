@@ -78,7 +78,7 @@ class T_PIPE_Test extends BaseTestCase
      */
     public function test_matches_a_pipe_character($text)
     {
-        $this->checkForMatches($text, true, "|");
+        $this->checkForMatches($text, true, "|", "|");
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2015-present Ganbaro Digital Ltd
+ * Copyright (c) 2016-present Ganbaro Digital Ltd
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,57 +36,29 @@
  * @category  Libraries
  * @package   TextParser\V1\Terminals
  * @author    Stuart Herbert <stuherbert@ganbarodigital.com>
- * @copyright 2015-present Ganbaro Digital Ltd www.ganbarodigital.com
+ * @copyright 2016-present Ganbaro Digital Ltd www.ganbarodigital.com
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigitalTest\TextParser\V1\Terminals\Lazy;
+namespace GanbaroDigital\TextParser\V1\Terminals\Meta;
 
-use GanbaroDigital\TextParser\V1\Terminals\Lazy\T_COMMA;
-use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
+use GanbaroDigital\TextParser\V1\Evaluators\CastToNumber;
+use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Lazy\T_COMMA
+ * matches an integer percentage (0% upwards)
+ *
+ * NOTE: this *will* match values larger than 100%
+ * it's your job to validate the percentage when using the extracted value
  */
-class T_COMMA_Test extends BaseTestCase
+class T_INT_PERCENTAGE extends RegexToken
 {
-    protected function getUnitUnderTest()
+    public function __construct(callable $evaluator = null)
     {
-        return new T_COMMA;
-    }
-
-    protected function getExpectedPseudoBNF()
-    {
-        return ",";
-    }
-
-    protected function getDatasetKeysToMatch()
-    {
-        return [
-            '1_comma',
-            '2_comma',
-            '3_comma',
-            '4_comma',
-            '10_comma',
-        ];
-    }
-
-    /**
-     * @covers ::matchAgainst
-     * @dataProvider provideMatches
-     */
-    public function test_matches_a_comma_character($text)
-    {
-        $this->checkForMatches($text, true, ",", ",");
-    }
-
-    /**
-     * @covers ::matchAgainst
-     * @dataProvider provideNonMatches
-     */
-    public function test_does_not_match_anything_else($text)
-    {
-        $this->checkForNonMatches($text);
+        if ($evaluator === null) {
+            $evaluator = new CastToNumber;
+        }
+        parent::__construct('/^([1-9][0-9]*|[0-9])%/', 32, $evaluator);
     }
 }

@@ -79,7 +79,7 @@ class T_EMPTY_Test extends BaseTestCase
      */
     public function test_matches_empty_string()
     {
-        $this->checkForMatches("", false, "");
+        $this->checkForMatches("", false, "", "");
     }
 
     /**
@@ -88,6 +88,6 @@ class T_EMPTY_Test extends BaseTestCase
      */
     public function test_matches_everything_else($text)
     {
-        $this->checkForMatches($text, false, '');
+        $this->checkForMatches($text, false, '', '');
     }
 }

@@ -56,6 +56,6 @@ class T_NUMBER extends RegexToken
         if ($evaluator === null) {
             $evaluator = new CastToNumber;
         }
-        parent::__construct("/^[-+]{0,1}[0-9][\\.0-9]*/", 32, $evaluator);
+        parent::__construct('/^([-+]{0,1}[0-9][0-9\\.]*)(?![0-9%])/', 32, $evaluator);
     }
 }

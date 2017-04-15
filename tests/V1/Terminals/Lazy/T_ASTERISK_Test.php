@@ -78,7 +78,7 @@ class T_ASTERISK_Test extends BaseTestCase
      */
     public function test_matches_an_asterisk_character($text)
     {
-        $this->checkForMatches($text, true, "*");
+        $this->checkForMatches($text, true, "*", "*");
     }
 
     /**

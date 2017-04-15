@@ -78,7 +78,7 @@ class T_BACKTICK_Test extends BaseTestCase
      */
     public function test_matches_a_backtick_character($text)
     {
-        $this->checkForMatches($text, true, "`");
+        $this->checkForMatches($text, true, "`", "`");
     }
 
     /**

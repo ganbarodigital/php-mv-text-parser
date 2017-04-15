@@ -78,7 +78,7 @@ class T_CIRCUMFLEX_Test extends BaseTestCase
      */
     public function test_matches_a_circumflex_character($text)
     {
-        $this->checkForMatches($text, true, "^");
+        $this->checkForMatches($text, true, "^", "^");
     }
 
     /**

@@ -83,7 +83,7 @@ class T_STERLING_Test extends BaseTestCase
      */
     public function test_matches_an_ascii_sterling_symbol($text)
     {
-        $this->checkForMatches($text, true, chr(156));
+        $this->checkForMatches($text, true, chr(156), chr(156));
     }
 
     /**
@@ -92,7 +92,7 @@ class T_STERLING_Test extends BaseTestCase
      */
     public function test_matches_a_utf8_sterling_symbol($text)
     {
-        $this->checkForMatches($text, true, "£");
+        $this->checkForMatches($text, true, "£", "£");
     }
 
     /**

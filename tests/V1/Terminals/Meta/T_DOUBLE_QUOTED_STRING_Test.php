@@ -79,7 +79,7 @@ class T_DOUBLE_QUOTED_STRING_Test extends BaseTestCase
     {
         $text = '"@100" 150';
 
-        $this->checkForMatches($text, true, '"@100"');
+        $this->checkForMatches($text, true, '"@100"', '"@100"');
     }
 
     /**
@@ -88,7 +88,7 @@ class T_DOUBLE_QUOTED_STRING_Test extends BaseTestCase
     public function test_ignores_a_second_double_quoted_string()
     {
         $text = '"@100", "@101"';
-        $this->checkForMatches($text, true, '"@100"');
+        $this->checkForMatches($text, true, '"@100"', '"@100"');
     }
 
     /**

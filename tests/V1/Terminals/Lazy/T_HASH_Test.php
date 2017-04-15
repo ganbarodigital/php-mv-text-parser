@@ -78,7 +78,7 @@ class T_HASH_Test extends BaseTestCase
      */
     public function test_matches_a_hash_character($text)
     {
-        $this->checkForMatches($text, true, "#");
+        $this->checkForMatches($text, true, "#", "#");
     }
 
     /**

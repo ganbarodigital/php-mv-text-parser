@@ -81,7 +81,7 @@ class T_FRACTIONAL_PERCENTAGE_Test extends BaseTestCase
      */
     public function test_matches_an_8bit_integer($text)
     {
-        $this->checkForMatches($text, true, $text, " not part of a number", new CastToNumber);
+        $this->checkForMatches($text, true, $text, $text, " not part of a number", new CastToNumber);
     }
 
     /**

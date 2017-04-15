@@ -78,7 +78,7 @@ class T_OPEN_SQUARE_BRACKET_Test extends BaseTestCase
      */
     public function test_matches_an_open_square_bracket_character($text)
     {
-        $this->checkForMatches($text, true, "[");
+        $this->checkForMatches($text, true, "[", "[");
     }
 
     /**

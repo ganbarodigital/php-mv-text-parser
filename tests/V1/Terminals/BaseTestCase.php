@@ -137,7 +137,7 @@ abstract class BaseTestCase extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-    protected function checkForMatches($text, $hasExpectedValue, $expectedValue, $remainingBytes = '100', $expectedEvaluator = null)
+    protected function checkForMatches($text, $hasExpectedValue, $expectedParserMatch, $expectedValue, $remainingBytes = '100', $expectedEvaluator = null)
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -149,7 +149,7 @@ abstract class BaseTestCase extends TestCase
         $expectedMatch = [
             "matched" => true,
             "hasValue" => true,
-            "value" => new Lexeme("unit", $expectedValue, $expectedEvaluator),
+            "value" => new Lexeme("unit", $expectedParserMatch, $expectedEvaluator),
             "position" => new ScannerPosition(1, 0, 0),
         ];
         if (!$hasExpectedValue) {
@@ -157,7 +157,7 @@ abstract class BaseTestCase extends TestCase
             $expectedMatch['value'] = null;
         }
 
-        $expectedRemaining = substr($text, strlen($expectedValue)) . $remainingBytes;
+        $expectedRemaining = substr($text, strlen($expectedParserMatch)) . $remainingBytes;
         $scanner = StreamScanner::newFromString($text . $remainingBytes, 'unit test');
 
         // ----------------------------------------------------------------

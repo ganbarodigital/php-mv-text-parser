@@ -78,7 +78,7 @@ class T_GREATER_THAN_Test extends BaseTestCase
      */
     public function test_matches_a_greater_than_sign($text)
     {
-        $this->checkForMatches($text, true, ">");
+        $this->checkForMatches($text, true, ">", ">");
     }
 
     /**

@@ -98,6 +98,6 @@ class T_REMAINING_Test extends BaseTestCase
      */
     public function test_matches_everything_else($text)
     {
-        $this->checkForMatches($text, true, $text, '');
+        $this->checkForMatches($text, true, $text, $text, '');
     }
 }

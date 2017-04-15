@@ -78,7 +78,7 @@ class T_QUESTION_MARK_Test extends BaseTestCase
      */
     public function test_matches_a_question_mark_character($text)
     {
-        $this->checkForMatches($text, true, "?");
+        $this->checkForMatches($text, true, "?", "?");
     }
 
     /**

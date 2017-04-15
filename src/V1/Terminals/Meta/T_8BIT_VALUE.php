@@ -56,6 +56,6 @@ class T_8BIT_VALUE extends RegexToken
         if ($evaluator === null) {
             $evaluator = new CastToNumber;
         }
-        parent::__construct('/^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?![0-9\\.])/', 4, $evaluator);
+        parent::__construct('/^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?![0-9\\.%])/', 4, $evaluator);
     }
 }
