@@ -58,7 +58,7 @@ class T_GREATER_THAN_Test extends BaseTestCase
 
     protected function getExpectedPseudoBNF()
     {
-        return "regex /^>(?=[^=])/";
+        return "regex /^>(?!=)/";
     }
 
     protected function getDatasetKeysToMatch()

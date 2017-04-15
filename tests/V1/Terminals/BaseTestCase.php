@@ -232,7 +232,7 @@ abstract class BaseTestCase extends TestCase
             "unit" => $this->getUnitUnderTest()
         ];
 
-        $scanner = StreamScanner::newFromString($text . '100', 'unit test');
+        $scanner = StreamScanner::newFromString($text, 'unit test');
         $adjuster = new CallTrackingAdjuster();
         $expectedAdjustments = [
             "adjustAfterMatch"

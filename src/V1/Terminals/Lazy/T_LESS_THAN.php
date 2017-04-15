@@ -56,6 +56,6 @@ class T_LESS_THAN extends RegexToken
         //
         // - T_GREATER_THAN_OR_LESS_THAN
         // - T_LESS_THAN_OR_EQUAL_TO
-        parent::__construct('/^<(?=[^>=])/');
+        parent::__construct('/^<(?![>=])/');
     }
 }
