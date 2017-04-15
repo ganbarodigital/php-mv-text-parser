@@ -69,6 +69,11 @@ function getTerminalDataSet()
         "integer_percentage_twenty_nine" => [ "29%" ],
         "integer_percentage_max" => [ "100%" ],
         "integer_percentage_max_plus_one" => [ "101%" ],
+        "hex_zero" => [ "00" ],
+        "hex_15_lower" => [ "0f" ],
+        "hex_15_upper" => [ "0F" ],
+        "hex_255_lower" => [ "ff" ],
+        "hex_255_upper" => [ "FF" ],
     ];
 
     // add entries for all individual characters, and their repetitions

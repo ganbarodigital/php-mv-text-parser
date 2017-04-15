@@ -56,6 +56,6 @@ class T_INT_0 extends RegexToken
         if ($evaluator === null) {
             $evaluator = new CastToNumber;
         }
-        parent::__construct('/^0(?![0-9\\.%])/', 2, $evaluator);
+        parent::__construct('/^0(?![0-9a-fA-F\\.%])/', 2, $evaluator);
     }
 }

@@ -59,7 +59,7 @@ class T_INT_0_Test extends BaseTestCase
 
     protected function getExpectedPseudoBNF()
     {
-        return 'regex /^0(?![0-9\\.%])/';
+        return 'regex /^0(?![0-9a-fA-F\\.%])/';
     }
 
     protected function getDatasetKeysToMatch()

@@ -59,7 +59,7 @@ class T_NUMBER_Test extends BaseTestCase
 
     protected function getExpectedPseudoBNF()
     {
-        return "regex /^([-+]{0,1}[0-9][0-9\\.]*)(?![0-9%])/";
+        return "regex /^([-+]{0,1}[0-9][0-9\\.]*)(?![0-9a-fA-F%])/";
     }
 
     protected function getDatasetKeysToMatch()
@@ -82,6 +82,7 @@ class T_NUMBER_Test extends BaseTestCase
             'fractional_percentage_max',
             'fractional_percentage_small',
             'fractional_percentage_large',
+            'hex_zero',
         ];
     }
 

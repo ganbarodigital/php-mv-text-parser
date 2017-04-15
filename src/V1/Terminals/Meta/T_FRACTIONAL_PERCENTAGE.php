@@ -56,6 +56,6 @@ class T_FRACTIONAL_PERCENTAGE extends RegexToken
         if ($evaluator === null) {
             $evaluator = new CastToNumber;
         }
-        parent::__construct('/^(1\\.0|0\\.[0-9]+|1|0)(?![0-9%])/', 32, $evaluator);
+        parent::__construct('/^(1\\.0|0\\.[0-9]+|1|0)(?![0-9a-fA-F%])/', 32, $evaluator);
     }
 }

@@ -32,6 +32,7 @@
   - added `T_GREATER_THAN_OR_EQUAL_TO` lazy-match terminal token
   - added `T_GREATER_THAN_OR_LESS_THAN` lazy-match terminal token
   - added `T_HASH` lazy-match terminal token
+  - added `T_HEX_NUMBER` meta terminal token
   - added `T_INT_0` strict-match terminal token
   - added `T_INT_1` strict-match terminal token
   - added `T_INT_PERCENTAGE` meta terminal token

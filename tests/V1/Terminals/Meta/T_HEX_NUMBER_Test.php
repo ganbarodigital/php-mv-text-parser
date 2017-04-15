@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2016-present Ganbaro Digital Ltd
+ * Copyright (c) 2015-present Ganbaro Digital Ltd
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,26 +36,58 @@
  * @category  Libraries
  * @package   TextParser\V1\Terminals
  * @author    Stuart Herbert <stuherbert@ganbarodigital.com>
- * @copyright 2016-present Ganbaro Digital Ltd www.ganbarodigital.com
+ * @copyright 2015-present Ganbaro Digital Ltd www.ganbarodigital.com
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigital\TextParser\V1\Terminals\Meta;
+namespace GanbaroDigitalTest\TextParser\V1\Terminals\Meta;
 
-use GanbaroDigital\TextParser\V1\Evaluators\CastToNumber;
-use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
+use GanbaroDigital\TextParser\V1\Evaluators\CastToString;
+use GanbaroDigital\TextParser\V1\Terminals\Meta\T_HEX_NUMBER;
+use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
- * matches a number
+ * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_HEX_NUMBER
  */
-class T_NUMBER extends RegexToken
+class T_HEX_NUMBER_Test extends BaseTestCase
 {
-    public function __construct(callable $evaluator = null)
+    protected function getUnitUnderTest()
     {
-        if ($evaluator === null) {
-            $evaluator = new CastToNumber;
-        }
-        parent::__construct('/^([-+]{0,1}[0-9][0-9\\.]*)(?![0-9a-fA-F%])/', 32, $evaluator);
+        return new T_HEX_NUMBER;
+    }
+
+    protected function getExpectedPseudoBNF()
+    {
+        return 'regex /^([-+]{0,1}([A-Fa-f0-9]{2})+)(?![0-9%])/';
+    }
+
+    protected function getDatasetKeysToMatch()
+    {
+        return [
+            "hex_zero",
+            "hex_15_lower",
+            "hex_15_upper",
+            "hex_255_lower",
+            "hex_255_upper",
+        ];
+    }
+
+    /**
+     * @covers ::matchAgainst
+     * @dataProvider provideMatches
+     */
+    public function test_matches_an_8bit_integer($text)
+    {
+        $this->checkForMatches($text, true, $text, $text, " not part of a number", new CastToString);
+    }
+
+    /**
+     * @covers ::matchAgainst
+     * @dataProvider provideNonMatches
+     */
+    public function test_does_not_match_anything_else($text)
+    {
+        $this->checkForNonMatches($text, " not part of a number");
     }
 }

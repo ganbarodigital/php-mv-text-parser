@@ -59,7 +59,7 @@ class T_8BIT_VALUE_Test extends BaseTestCase
 
     protected function getExpectedPseudoBNF()
     {
-        return 'regex /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?![0-9\\.%])/';
+        return 'regex /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?![0-9a-fA-F\\.%])/';
     }
 
     protected function getDatasetKeysToMatch()

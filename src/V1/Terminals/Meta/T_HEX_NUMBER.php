@@ -43,19 +43,19 @@
 
 namespace GanbaroDigital\TextParser\V1\Terminals\Meta;
 
-use GanbaroDigital\TextParser\V1\Evaluators\CastToNumber;
+use GanbaroDigital\TextParser\V1\Evaluators\CastToString;
 use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
- * matches a number
+ * matches a base16 number
  */
-class T_NUMBER extends RegexToken
+class T_HEX_NUMBER extends RegexToken
 {
     public function __construct(callable $evaluator = null)
     {
         if ($evaluator === null) {
-            $evaluator = new CastToNumber;
+            $evaluator = new CastToString;
         }
-        parent::__construct('/^([-+]{0,1}[0-9][0-9\\.]*)(?![0-9a-fA-F%])/', 32, $evaluator);
+        parent::__construct('/^([-+]{0,1}([A-Fa-f0-9]{2})+)(?![0-9%])/', 32, $evaluator);
     }
 }
