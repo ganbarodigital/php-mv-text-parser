@@ -45,12 +45,12 @@ namespace GanbaroDigitalTest\TextParser\V1\Scanners;
 
 use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
 use GanbaroDigital\TextParser\V1\Scanners\StringScanner;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass GanbaroDigital\TextParser\V1\Scanners\StringScanner
  */
-class StringScannerTest extends PHPUnit_Framework_TestCase
+class StringScannerTest extends TestCase
 {
     /**
      * @covers ::__construct

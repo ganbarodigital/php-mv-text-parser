@@ -49,9 +49,9 @@ use GanbaroDigital\TextParser\V1\Lexer\NoopAdjuster;
 use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
 use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
 use GanbaroDigital\TextParser\V1\Scanners\StringScanner;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class BaseTestCase extends PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends TestCase
 {
     /**
      * @covers ::__construct

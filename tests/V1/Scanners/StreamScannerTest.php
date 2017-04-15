@@ -45,12 +45,12 @@ namespace GanbaroDigitalTest\TextParser\V1\Scanners;
 
 use GanbaroDigital\TextParser\V1\Scanners\ScannerPosition;
 use GanbaroDigital\TextParser\V1\Scanners\StreamScanner;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass GanbaroDigital\TextParser\V1\Scanners\StreamScanner
  */
-class StreamScannerTest extends PHPUnit_Framework_TestCase
+class StreamScannerTest extends TestCase
 {
     /**
      * @covers ::newFromString
