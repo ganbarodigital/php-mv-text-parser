@@ -67,7 +67,6 @@ class T_8BIT_VALUE_Test extends BaseTestCase
         return [
             'integer_zero',
             'integer_one',
-            'integer_positive',
             'integer_8bit_max',
         ];
     }

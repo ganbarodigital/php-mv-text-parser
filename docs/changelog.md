@@ -26,6 +26,7 @@
   - added `T_DOUBLE_QUOTE` lazy-match terminal token
   - added `T_EMPTY` meta terminal token
   - added `T_EQUALS` lazy-match terminal token
+  - added `T_FIXED_WIDTH_HEX_NUMBER` meta terminal token
   - added `T_FORWARD_SLASH` lazy-match terminal token
   - added `T_FRACTIONAL_PERCENTAGE` meta terminal token
   - added `T_GREATER_THAN` lazy-match terminal token

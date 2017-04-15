@@ -44,32 +44,32 @@
 namespace GanbaroDigitalTest\TextParser\V1\Terminals\Meta;
 
 use GanbaroDigital\TextParser\V1\Evaluators\CastToString;
-use GanbaroDigital\TextParser\V1\Terminals\Meta\T_HEX_NUMBER;
+use GanbaroDigital\TextParser\V1\Terminals\Meta\T_FIXED_WIDTH_HEX_NUMBER;
 use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
 
 /**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_HEX_NUMBER
+ * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_FIXED_WIDTH_HEX_NUMBER
  */
-class T_HEX_NUMBER_Test extends BaseTestCase
+class T_FIXED_WIDTH_HEX_NUMBER_Test extends BaseTestCase
 {
     protected function getUnitUnderTest()
     {
-        return new T_HEX_NUMBER;
+        return new T_FIXED_WIDTH_HEX_NUMBER(3);
     }
 
     protected function getExpectedPseudoBNF()
     {
-        return 'regex /^([-+]{0,1}([A-Fa-f0-9]{2})+)(?![0-9a-fA-F\\.%])/';
+        return 'regex /^([-+]{0,1}[A-Fa-f0-9]{3})(?![0-9A-Fa-f\\.%])/';
     }
 
     protected function getDatasetKeysToMatch()
     {
         return [
-            "hex_zero",
-            "hex_15_lower",
-            "hex_15_upper",
-            "hex_255_lower",
-            "hex_255_upper",
+            "integer_8bit_max",
+            "integer_8bit_max_plus_one",
+            "hex_black",
+            "hex_white",
+            "hex_gray",
         ];
     }
 

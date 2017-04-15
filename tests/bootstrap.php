@@ -47,10 +47,10 @@ function getTerminalDataSet()
         "empty" => [ "" ],
         "integer_zero" => [ "0" ],
         "integer_one" => [ "1" ],
-        "integer_positive" => [ "100" ],
+        "integer_positive" => [ "10000" ],
         "integer_positive_max" => [ (string)PHP_INT_MAX ],
-        "integer_positive_signed" => [ "+100" ],
-        "integer_negative" => [ "-100" ],
+        "integer_positive_signed" => [ "+10000" ],
+        "integer_negative" => [ "-10000" ],
         "integer_negative_min" => [ (string)PHP_INT_MIN ],
         "float_zero" => [ "0.0" ],
         "float_positive" => [ "3.1415927" ],
@@ -74,6 +74,9 @@ function getTerminalDataSet()
         "hex_15_upper" => [ "0F" ],
         "hex_255_lower" => [ "ff" ],
         "hex_255_upper" => [ "FF" ],
+        "hex_black" => [ "000" ],
+        "hex_white" => [ "fff" ],
+        "hex_gray" => [ "aaa" ],
     ];
 
     // add entries for all individual characters, and their repetitions

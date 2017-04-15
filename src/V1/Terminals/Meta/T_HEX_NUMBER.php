@@ -47,7 +47,7 @@ use GanbaroDigital\TextParser\V1\Evaluators\CastToString;
 use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
- * matches a base16 number
+ * matches a base16 number - must have even length characters (00, ff, 01aa)
  */
 class T_HEX_NUMBER extends RegexToken
 {
@@ -56,6 +56,6 @@ class T_HEX_NUMBER extends RegexToken
         if ($evaluator === null) {
             $evaluator = new CastToString;
         }
-        parent::__construct('/^([-+]{0,1}([A-Fa-f0-9]{2})+)(?![0-9%])/', 32, $evaluator);
+        parent::__construct('/^([-+]{0,1}([A-Fa-f0-9]{2})+)(?![0-9a-fA-F\\.%])/', 32, $evaluator);
     }
 }

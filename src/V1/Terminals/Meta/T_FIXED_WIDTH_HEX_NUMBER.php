@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2015-present Ganbaro Digital Ltd
+ * Copyright (c) 2016-present Ganbaro Digital Ltd
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,58 +36,28 @@
  * @category  Libraries
  * @package   TextParser\V1\Terminals
  * @author    Stuart Herbert <stuherbert@ganbarodigital.com>
- * @copyright 2015-present Ganbaro Digital Ltd www.ganbarodigital.com
+ * @copyright 2016-present Ganbaro Digital Ltd www.ganbarodigital.com
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link      http://ganbarodigital.github.io/php-mv-text-parser
  */
 
-namespace GanbaroDigitalTest\TextParser\V1\Terminals\Meta;
+namespace GanbaroDigital\TextParser\V1\Terminals\Meta;
 
 use GanbaroDigital\TextParser\V1\Evaluators\CastToString;
-use GanbaroDigital\TextParser\V1\Terminals\Meta\T_HEX_NUMBER;
-use GanbaroDigitalTest\TextParser\V1\Terminals\BaseTestCase;
+use GanbaroDigital\TextParser\V1\Grammars\RegexToken;
 
 /**
- * @coversDefaultClass GanbaroDigital\TextParser\V1\Terminals\Meta\T_HEX_NUMBER
+ * matches a fixed-width base16 number
  */
-class T_HEX_NUMBER_Test extends BaseTestCase
+class T_FIXED_WIDTH_HEX_NUMBER extends RegexToken
 {
-    protected function getUnitUnderTest()
+    public function __construct($width, callable $evaluator = null)
     {
-        return new T_HEX_NUMBER;
-    }
+        if ($evaluator === null) {
+            $evaluator = new CastToString;
+        }
+        $widthClause = "{{$width}}";
 
-    protected function getExpectedPseudoBNF()
-    {
-        return 'regex /^([-+]{0,1}([A-Fa-f0-9]{2})+)(?![0-9a-fA-F\\.%])/';
-    }
-
-    protected function getDatasetKeysToMatch()
-    {
-        return [
-            "hex_zero",
-            "hex_15_lower",
-            "hex_15_upper",
-            "hex_255_lower",
-            "hex_255_upper",
-        ];
-    }
-
-    /**
-     * @covers ::matchAgainst
-     * @dataProvider provideMatches
-     */
-    public function test_matches_an_8bit_integer($text)
-    {
-        $this->checkForMatches($text, true, $text, $text, " not part of a number", new CastToString);
-    }
-
-    /**
-     * @covers ::matchAgainst
-     * @dataProvider provideNonMatches
-     */
-    public function test_does_not_match_anything_else($text)
-    {
-        $this->checkForNonMatches($text, " not part of a number");
+        parent::__construct('/^([-+]{0,1}[A-Fa-f0-9]' . $widthClause . ')(?![0-9A-Fa-f\\.%])/', 32, $evaluator);
     }
 }

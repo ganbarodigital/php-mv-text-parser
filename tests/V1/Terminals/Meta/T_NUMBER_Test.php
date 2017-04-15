@@ -83,6 +83,7 @@ class T_NUMBER_Test extends BaseTestCase
             'fractional_percentage_small',
             'fractional_percentage_large',
             'hex_zero',
+            'hex_black',
         ];
     }
 
