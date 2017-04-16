@@ -51,7 +51,7 @@ class BuildObjectFromList
 
     private $keys;
 
-    public function __construct($classname, $keys)
+    public function __construct($classname, array $keys)
     {
         $this->classname = $classname;
         $this->keys = $keys;
