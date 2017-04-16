@@ -59,3 +59,5 @@
   - added `Scanner` interface
   - added `StreamScanner` scanner
   - added `StringScanner` scanner
+* Added support for evaluating parsed values
+  - added `CastToObject`
