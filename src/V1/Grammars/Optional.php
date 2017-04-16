@@ -60,14 +60,21 @@ class Optional implements GrammarRule
     private $buildingBlock;
 
     /**
+     * how to evaluate our values when we're done
+     * @var callable|null
+     */
+    private $evaluator;
+
+    /**
      * create a new instance
      *
      * @param GrammarRule $grammar
      *        the optional grammar
      */
-    public function __construct(GrammarRule $grammar)
+    public function __construct(GrammarRule $grammar, callable $evaluator = null)
     {
         $this->buildingBlock = $grammar;
+        $this->evaluator = $evaluator;
     }
 
     /**
