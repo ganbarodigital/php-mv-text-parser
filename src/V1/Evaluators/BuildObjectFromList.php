@@ -66,16 +66,38 @@ class BuildObjectFromList
 
         $params = [];
         foreach($this->keys as $key) {
-            if (isset($list[$key])) {
-                $params[] = $list[$key];
+            // do we have a compound key?
+            if (is_array($key)) {
+                $params[] = $this->buildUsingCompoundKey($list, $key);
             }
-            else {
-                $params[] = null;
+            else  {
+                $params[] = $this->buildUsingSimpleKey($list, $key);
             }
         }
 
         $refClass = new ReflectionClass($this->classname);
         $retval = $refClass->newInstanceArgs($params);
         return $retval;
+    }
+
+    protected function buildUsingCompoundKey($list, $compoundKey)
+    {
+        $retval = '';
+        foreach ($compoundKey as $key) {
+            if (isset($list[$key])) {
+                $retval .= $list[$key];
+            }
+        }
+
+        return $retval;
+    }
+
+    protected function buildUsingSimpleKey($list, $key)
+    {
+        if (isset($list[$key])) {
+            return $list[$key];
+        }
+
+        return null;
     }
 }
