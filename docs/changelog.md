@@ -60,4 +60,21 @@
   - added `StreamScanner` scanner
   - added `StringScanner` scanner
 * Added support for evaluating parsed values
+  - added `BuildArrayFromList`
+  - added `BuildAssociativeArrayFromList`
+  - added `BuildDictionaryFromList`
+  - added `BuildObjectFromList`
+  - added `CastToNumber`
   - added `CastToObject`
+  - added `CastToString`
+  - added `DecodeUnicode`
+  - added `EvaluatorList`
+  - added `EvaluatorQueue`
+  - added `EvaluatorStack`
+  - added `ListEntry`
+  - added `NoOp`
+  - added `ReturnFalse`
+  - added `ReturnNull`
+  - added `ReturnTrue`
+  - added `StripQuotes`
+  - added `UnescapeString`
