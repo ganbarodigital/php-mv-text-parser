@@ -43,6 +43,7 @@
   - added `T_OPEN_BRACE` lazy-match terminal token
   - added `T_OPEN_BRACKET` lazy-match terminal token
   - added `T_OPEN_SQUARE_BRACKET` lazy-match terminal token
+  - added `T_OPTIONAL_WHITESPACE` to consume whitespace if it's there
   - added `T_PERCENT` lazy-match terminal token
   - added `T_PERIOD` lazy-match terminal token
   - added `T_PIPE` lazy-match terminal token
